@@ -1,5 +1,5 @@
 from django.db import models
-
+from hashlib import  sha3_384
 # Create your models here.
 
 TYPE_CHOICES = (
@@ -16,16 +16,6 @@ class Role(models.Model):
     permission = models.IntegerField(default=0)
 
 
-class Log(models.Model):
-    path = models.CharField(max_length=300)
-
-
-class Group(models.Model):
-    name = models.CharField(max_length=100)
-    creation_field = models.DateTimeField()
-    modification_time = models.DateTimeField()
-    description = models.CharField(max_length=500)
-
 
 class User(models.Model):
     creation_field = models.DateTimeField()
@@ -37,21 +27,27 @@ class User(models.Model):
     password_change = models.DateTimeField()
     private_key = models.CharField(max_length=300, unique=True)
     public_key = models.CharField(max_length=200, unique=True)
-    role = models.OneToOneField(
-        Role,
-        on_delete=models.CASCADE
-    )
-    logs = models.OneToOneField(
-        Log,
-        on_delete=models.CASCADE
-    )
-    groups = models.ManyToManyField(
-        Group,
-        related_name='users'
+    logs = models.CharField(max_length=300)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        password = self.password.encode()
+        hash = sha3_384(password)
+        self.password = hash.hexdigest()
+        super(User, self).save(*args,**kwargs)
+
+class Group(models.Model):
+    name = models.CharField(max_length=100)
+    creation_field = models.DateTimeField()
+    modification_time = models.DateTimeField()
+    description = models.CharField(max_length=500)
+    users = models.ManyToManyField(
+        'User',
+        related_name='groups'
     )
 
 
-class Object(models.Model):
+class INode(models.Model):
     name = models.CharField(max_length=100)
     path = models.CharField(max_length=300)
     type = models.CharField(max_length=5,choices=TYPE_CHOICES)
@@ -65,23 +61,23 @@ class Object(models.Model):
         on_delete=models.CASCADE
     )
     users = models.ManyToManyField(
-        User,
-        related_name='objects',
+        'User',
+        related_name='inodes',
         through='User_Object'
     )
     groups = models.ManyToManyField(
-        Group,
-        related_name='objects',
+        'Group',
+        related_name='inodes',
         through='Group_Object'
     )
 
 class User_Object(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    object = models.ForeignKey(Object, on_delete=models.CASCADE)
+    inode = models.ForeignKey(INode, on_delete=models.CASCADE)
     permission = models.IntegerField()
 
 class Group_Object(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    object = models.ForeignKey(Object, on_delete=models.CASCADE)
+    inode = models.ForeignKey(INode, on_delete=models.CASCADE)
     permission = models.IntegerField()
 
