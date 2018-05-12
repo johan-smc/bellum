@@ -212,5 +212,5 @@ bellum_app/__pycache__/
 bellum_app/migrations/__pycache__/
 bellum_app/serializers/__pycache__/
 bellum/__pycache__/
-bellum/bellum_app/migrations/0001_initial.py
+bellum_app/migrations/0001_initial.py
 # End of https://www.gitignore.io/api/macos
