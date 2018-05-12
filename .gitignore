@@ -208,8 +208,8 @@ target/
 
 # mine
 
-.bellum_app/__pycache__/*
-.bellum_app/migrations/__pycache__/*
-.bellum_app/serializers/__pycache__/*
+bellum_app/__pycache__/*
+bellum_app/migrations/__pycache__/*
+bellum_app/serializers/__pycache__/*
 
 # End of https://www.gitignore.io/api/macos
