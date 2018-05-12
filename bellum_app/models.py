@@ -1,5 +1,5 @@
 from django.db import models
-
+from hashlib import  sha3_384
 # Create your models here.
 
 TYPE_CHOICES = (
@@ -31,7 +31,9 @@ class User(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        self.password = "sto"
+        password = self.password.encode()
+        hash = sha3_384(password)
+        self.password = hash.hexdigest()
         super(User, self).save(*args,**kwargs)
 
 class Group(models.Model):
