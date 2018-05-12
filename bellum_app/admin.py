@@ -3,8 +3,7 @@ from .models import *
 
 admin.site.register(User);
 admin.site.register(Group);
-admin.site.register(Object);
+admin.site.register(INode);
 admin.site.register(Role);
-admin.site.register(Log);
 
 # Register your models here.
