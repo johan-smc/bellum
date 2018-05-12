@@ -144,8 +144,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-db.sqlite3
-*/__pychace__
+.db.sqlite3
+.*/__pychace__
 
 
 # End of https://www.gitignore.io/api/macos
