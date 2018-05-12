@@ -37,8 +37,14 @@ class User(models.Model):
     password_change = models.DateTimeField()
     private_key = models.CharField(max_length=300, unique=True)
     public_key = models.CharField(max_length=200, unique=True)
-    role = models.OneToOneField(Role)
-    logs = models.OneToOneField(Log)
+    role = models.OneToOneField(
+        Role,
+        on_delete=models.CASCADE
+    )
+    logs = models.OneToOneField(
+        Log,
+        on_delete=models.CASCADE
+    )
     groups = models.ManyToManyField(
         Group,
         related_name='users'
