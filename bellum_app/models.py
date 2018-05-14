@@ -1,5 +1,7 @@
 from django.db import models
 from hashlib import  sha3_384
+from Crypto.PublicKey import RSA
+from datetime import  datetime
 # Create your models here.
 
 TYPE_CHOICES = (
@@ -18,22 +20,30 @@ class Role(models.Model):
 
 
 class User(models.Model):
-    creation_field = models.DateTimeField()
+    creation_field = models.DateTimeField(default=datetime.now, blank=True)
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100, unique=True)
     user_name = models.CharField(max_length=25, unique=True)
-    modification_time = models.DateTimeField()
+    modification_time = models.DateTimeField(default=datetime.now, blank=True)
     password = models.CharField(max_length=100)
-    password_change = models.DateTimeField()
-    private_key = models.CharField(max_length=300, unique=True)
-    public_key = models.CharField(max_length=200, unique=True)
+    password_change = models.DateTimeField(default=datetime.now, blank=True)
+    private_key = models.CharField(max_length=300, unique=True, blank=True)
+    public_key = models.CharField(max_length=200, unique=True, blank=True)
     logs = models.CharField(max_length=300)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
+
+        #hash password
         password = self.password.encode()
         hash = sha3_384(password)
         self.password = hash.hexdigest()
+
+        #generate private and public key
+        key = RSA.generate(2048) # TODO - verify params
+        self.private_key = key
+        self.public_key = key.publickey()
+
         super(User, self).save(*args,**kwargs)
 
 class Group(models.Model):
