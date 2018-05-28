@@ -1,5 +1,12 @@
 from django.db import models
 from hashlib import  sha3_384
+import datetime
+
+
+# token
+from rest_framework.authentication import  TokenAuthentication
+from rest_framework import exceptions
+
 # Create your models here.
 
 TYPE_CHOICES = (
@@ -81,3 +88,21 @@ class Group_Object(models.Model):
     inode = models.ForeignKey(INode, on_delete=models.CASCADE)
     permission = models.IntegerField()
 
+class ExpiringTokenAuthentication(TokenAuthentication):
+
+    def authenticate_credentials(self, key):
+
+        try:
+            token = self.model.get(key=key)
+        except self.model.DoesNotExist:
+            raise exceptions.AuthenticationFailed('Invalid Token')
+
+        if not token.user.is_active:
+            raise exceptions.AuthenticationFailed('Usuario inactive or delete')
+
+        utc_now = datetime.datetime.utcnow()
+
+        if token.created < utc_now - datetime.timedelta(hours=24):
+            raise  exceptions.AuthenticationFailed('Token has expired')
+
+        return token.user, token
