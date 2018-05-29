@@ -68,27 +68,34 @@ class Group(models.Model):
 
 class INode(models.Model):
     name = models.CharField(max_length=100)
-    path = models.CharField(max_length=300)
-    type = models.CharField(max_length=5,choices=TYPE_CHOICES)
-    creation_field = models.DateTimeField()
-    modification_time = models.DateTimeField()
-    permission = models.IntegerField(default=0)
-    password = models.CharField(max_length=400)
-    last_hash = models.CharField(max_length=400)
+    file = models.FileField(
+        null=True
+    )
     owner = models.OneToOneField(
         My_User,
         on_delete=models.CASCADE
     )
-    users = models.ManyToManyField(
-        'My_User',
-        related_name='inodes',
-        through='User_Inode'
-    )
+    permission = models.IntegerField(default=0)
+    #
     groups = models.ManyToManyField(
         'Group',
         related_name='inodes',
         through='Group_Inode'
     )
+    type = models.CharField(max_length=5,choices=TYPE_CHOICES)
+    password = models.CharField(max_length=400)
+    creation_field = models.DateTimeField(default=datetime.now, blank=True)
+    modification_time = models.DateTimeField(default=datetime.now, blank=True)
+    last_hash = models.CharField(max_length=400 , blank=True)
+    users = models.ManyToManyField(
+        'My_User',
+        related_name='inodes',
+        through='User_Inode'
+    )
+    def save (self,**kwargs):
+        filehash = self.file.__str__().encode()
+        filehash = sha3_384(filehash)
+        self.last_hash = filehash.hexdigest()
 
 class User_Inode(models.Model):
     user = models.ForeignKey(My_User, on_delete=models.CASCADE)

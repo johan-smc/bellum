@@ -16,7 +16,7 @@ class My_UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data,user):
         data = validated_data.pop('role')
         role = Role.objects.get(pk=data)
-        validated_data['role'] = role;
+        validated_data['role'] = role
         return My_User.objects.create(user_django=user,**validated_data)
 
 
