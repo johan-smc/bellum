@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from rest_framework.authentication import  TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework import exceptions
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your models here.
 
@@ -28,6 +29,8 @@ class Role(models.Model):
 
 
 class My_User(models.Model):
+
+
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100, unique=True)
@@ -57,13 +60,35 @@ class My_User(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
-    creation_field = models.DateTimeField()
-    modification_time = models.DateTimeField()
+    creation_field = models.DateTimeField(default=datetime.now, blank=True)
+    modification_time = models.DateTimeField(default=datetime.now, blank=True)
     description = models.CharField(max_length=500)
     users = models.ManyToManyField(
         'My_User',
         related_name='groups'
     )
+    def usrJoin(self,request):
+        try:
+            usr = My_User.objects.get(id=request["idUsr"])
+            print(usr)
+            self.users.add(usr)
+            self.modification_time = models.DateTimeField(default=datetime.now, blank=True)
+        except ObjectDoesNotExist:
+            print("Usuario  no encontrado")
+            return False
+        return True
+
+    def usrUnJoin(self,request):
+        try:
+            usr = My_User.objects.get(id=request["idUsr"])
+            print(usr)
+            self.users.remove(usr)
+            self.modification_time = models.DateTimeField(default=datetime.now, blank=True)
+        except ObjectDoesNotExist:
+            print("Usuario  no encontrado")
+            return False
+        return True
+
 
 
 class INode(models.Model):
