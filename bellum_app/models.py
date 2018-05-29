@@ -3,7 +3,7 @@ from hashlib import  sha3_384
 from Crypto.PublicKey import RSA
 from datetime import  datetime
 
-
+from django.contrib.auth.models import User
 # token
 from rest_framework.authentication import  TokenAuthentication
 from rest_framework import exceptions
@@ -16,7 +16,7 @@ TYPE_CHOICES = (
 )
 ROLE_CHOICES = (
     ('ADM','Administrator'),
-    ('USR' , 'User')
+    ('USR', 'User')
 )
 
 class Role(models.Model):
@@ -25,32 +25,33 @@ class Role(models.Model):
 
 
 
-class User(models.Model):
+class My_user(models.Model):
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100, unique=True)
-    user_name = models.CharField(max_length=25, unique=True)
     modification_time = models.DateTimeField(default=datetime.now, blank=True)
-    password = models.CharField(max_length=100)
     password_change = models.DateTimeField(default=datetime.now, blank=True)
     private_key = models.CharField(max_length=300, unique=True, blank=True)
     public_key = models.CharField(max_length=200, unique=True, blank=True)
     logs = models.CharField(max_length=300)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    user_django = models.OneToOneField(User, on_delete=models.CASCADE)
+    #user_name = models.CharField(max_length=25, unique=True)
+    #password = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-
+        '''
         #hash password
         password = self.password.encode()
         hash = sha3_384(password)
         self.password = hash.hexdigest()
-
+        '''
         #generate private and public key
         key = RSA.generate(2048) # TODO - verify params
         self.private_key = key
         self.public_key = key.publickey()
 
-        super(User, self).save(*args,**kwargs)
+        super(My_user, self).save(*args,**kwargs)
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
@@ -58,7 +59,7 @@ class Group(models.Model):
     modification_time = models.DateTimeField()
     description = models.CharField(max_length=500)
     users = models.ManyToManyField(
-        'User',
+        'My_user',
         related_name='groups'
     )
 
@@ -73,26 +74,26 @@ class INode(models.Model):
     password = models.CharField(max_length=400)
     last_hash = models.CharField(max_length=400)
     owner = models.OneToOneField(
-        User,
+        My_user,
         on_delete=models.CASCADE
     )
     users = models.ManyToManyField(
-        'User',
+        'My_user',
         related_name='inodes',
-        through='User_Object'
+        through='User_Inode'
     )
     groups = models.ManyToManyField(
         'Group',
         related_name='inodes',
-        through='Group_Object'
+        through='Group_Inode'
     )
 
-class User_Object(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class User_Inode(models.Model):
+    user = models.ForeignKey(My_user, on_delete=models.CASCADE)
     inode = models.ForeignKey(INode, on_delete=models.CASCADE)
     permission = models.IntegerField()
 
-class Group_Object(models.Model):
+class Group_Inode(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     inode = models.ForeignKey(INode, on_delete=models.CASCADE)
     permission = models.IntegerField()
