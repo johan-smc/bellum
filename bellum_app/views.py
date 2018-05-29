@@ -36,7 +36,7 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
              status = status.HTTP_200_OK
             )
         return Response(
-                "Wrong password",
+                serializer.errors,
                 status = status.HTTP_400_BAD_REQUEST
         )
 

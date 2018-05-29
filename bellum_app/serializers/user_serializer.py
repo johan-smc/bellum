@@ -14,12 +14,9 @@ class My_UserSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data,user):
-        print("Create my user")
-        print(validated_data)
         data = validated_data.pop('role')
         role = Role.objects.get(pk=data)
         validated_data['role'] = role;
-        print("hi")
         return My_User.objects.create(user_django=user,**validated_data)
 
 
@@ -34,7 +31,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         profile_data = validated_data.pop('my_user')
-        print(profile_data)
         user = User.objects.create(**validated_data)
         user.set_password(validated_data['password'])
         user.save()

@@ -6,8 +6,7 @@ import pytz
 
 from django.contrib.auth.models import User
 # token
-from rest_framework.authentication import  TokenAuthentication, get_authorization_header
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.authentication import  TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework import exceptions
 
