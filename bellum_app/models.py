@@ -1,11 +1,14 @@
 from django.db import models
 from hashlib import  sha3_384
 from Crypto.PublicKey import RSA
-from datetime import  datetime
+from datetime import  datetime,timedelta
+import pytz
 
 from django.contrib.auth.models import User
 # token
-from rest_framework.authentication import  TokenAuthentication
+from rest_framework.authentication import  TokenAuthentication, get_authorization_header
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.authtoken.models import Token
 from rest_framework import exceptions
 
 # Create your models here.
@@ -101,18 +104,21 @@ class Group_Inode(models.Model):
 class ExpiringTokenAuthentication(TokenAuthentication):
 
     def authenticate_credentials(self, key):
-
+        print(Token.objects.get(key=key))
+        print(self.model)
+        print(key)
         try:
-            token = self.model.get(key=key)
-        except self.model.DoesNotExist:
+            token = Token.objects.get(key=key)
+        except Token.DoesNotExist:
             raise exceptions.AuthenticationFailed('Invalid Token')
 
         if not token.user.is_active:
-            raise exceptions.AuthenticationFailed('Usuario inactive or delete')
+            raise exceptions.AuthenticationFailed('User inactive or delete')
 
-        utc_now = datetime.datetime.utcnow()
+        utc_now = datetime.utcnow()
+        utc_now = utc_now.replace(tzinfo=pytz.utc)
 
-        if token.created < utc_now - datetime.timedelta(hours=24):
+        if token.created < utc_now - timedelta(hours=24):
             raise  exceptions.AuthenticationFailed('Token has expired')
 
         return token.user, token

@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
+from bellum_app.api import  user_service
 from bellum_app.models import User
 
 
@@ -57,6 +58,12 @@ class UserViewSet(viewsets.ViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+    def get(self, request):
+        return Response(
+            "ok funciono creo",
+            status=status.HTTP_200_OK
+        )
+
     def get_permissions(self):
         if self.action == 'create':
             permission_classes = [AllowAny]
@@ -66,4 +73,5 @@ class UserViewSet(viewsets.ViewSet):
 
 
 register =UserViewSet.as_view(dict(post='create'))
+get_users = UserViewSet.as_view(dict(get='get'))
 obtain_expiring_auth_token = ObtainExpiringAuthToken.as_view()

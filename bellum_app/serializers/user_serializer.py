@@ -6,7 +6,7 @@ from hashlib import  sha3_384
 
 
 class My_UserSerializer(serializers.ModelSerializer):
-    user_django = serializers.Field(required=False)
+    user_django = serializers.ReadOnlyField(required=False)
     class Meta:
         model = My_User
         fields = '__all__'
@@ -21,6 +21,7 @@ class My_UserSerializer(serializers.ModelSerializer):
         validated_data['role'] = role;
         print("hi")
         return My_User.objects.create(user_django=user,**validated_data)
+
 
 
 class UserSerializer(serializers.ModelSerializer):
