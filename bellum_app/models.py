@@ -10,6 +10,8 @@ from rest_framework.authentication import  TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework import exceptions
 
+
+from bellum.settings import FILE_ROOT
 # Create your models here.
 
 TYPE_CHOICES = (
@@ -20,6 +22,10 @@ ROLE_CHOICES = (
     ('ADM','Administrator'),
     ('USR', 'User')
 )
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return FILE_ROOT+'/user_{0}/{1}'.format(instance.owner.id, filename)
 
 class Role(models.Model):
     name = models.CharField(max_length=4,choices=ROLE_CHOICES)
@@ -69,19 +75,14 @@ class Group(models.Model):
 class INode(models.Model):
     name = models.CharField(max_length=100)
     file = models.FileField(
-        null=True
+        blank=False, null=False,upload_to=user_directory_path
     )
-    owner = models.OneToOneField(
+    owner = models.ForeignKey(
         My_User,
         on_delete=models.CASCADE
     )
     permission = models.IntegerField(default=0)
     #
-    groups = models.ManyToManyField(
-        'Group',
-        related_name='inodes',
-        through='Group_Inode'
-    )
     type = models.CharField(max_length=5,choices=TYPE_CHOICES)
     password = models.CharField(max_length=400)
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
@@ -92,10 +93,16 @@ class INode(models.Model):
         related_name='inodes',
         through='User_Inode'
     )
-    def save (self,**kwargs):
+    groups = models.ManyToManyField(
+        'Group',
+        related_name='inodes',
+        through='Group_Inode'
+    )
+    def save (self,*args,**kwargs):
         filehash = self.file.__str__().encode()
         filehash = sha3_384(filehash)
         self.last_hash = filehash.hexdigest()
+        super(INode, self).save(*args, **kwargs)
 
 class User_Inode(models.Model):
     user = models.ForeignKey(My_User, on_delete=models.CASCADE)
@@ -128,3 +135,6 @@ class ExpiringTokenAuthentication(TokenAuthentication):
             raise  exceptions.AuthenticationFailed('Token has expired')
 
         return token.user, token
+
+
+

@@ -81,7 +81,8 @@ class FileViewSet(viewsets.ViewSet):
         request.data['owner'] = user_service.get_pk(token);
         file_serializer = File_Serializer(data=request.data)
         if file_serializer.is_valid():
-            file_serializer.create(request.data)
+            file_serializer.save()
+            #file_serializer.create(request.data)
             return Response(
                 file_serializer.data,
                 status=status.HTTP_201_CREATED
