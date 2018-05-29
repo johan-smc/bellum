@@ -1,30 +1,44 @@
 from rest_framework import  serializers
-from bellum_app.models import My_user,Role
+from bellum_app.models import My_User,Role
+from django.contrib.auth.models import User
 from hashlib import  sha3_384
 
-class UserSerializer(serializers.ModelSerializer):
 
-    password = serializers.CharField(write_only=True)
+
+class My_UserSerializer(serializers.ModelSerializer):
+    user_django = serializers.Field(required=False)
     class Meta:
-        model = My_user
+        model = My_User
         fields = '__all__'
 
 
 
-    def create(self, validated_data):
+    def create(self, validated_data,user):
+        print("Create my user")
+        print(validated_data)
         data = validated_data.pop('role')
         role = Role.objects.get(pk=data)
         validated_data['role'] = role;
-        return My_user.objects.create(**validated_data)
+        print("hi")
+        return My_User.objects.create(user_django=user,**validated_data)
 
-    def authenticate(self):
-        user = My_user.objects.get(user_name=self.initial_data['user_name'])
-        hash_temp = sha3_384(self.initial_data['password'].encode()).hexdigest()
-        if user.password == hash_temp :
-            return True
-        return False
 
-    def get_user(self):
-        user = My_user.objects.get(user_name=self.initial_data['user_name'])
-        print(user)
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    my_user = My_UserSerializer(required=False)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'my_user')
+
+    def create(self, validated_data):
+        profile_data = validated_data.pop('my_user')
+        print(profile_data)
+        user = User.objects.create(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        my_user = My_UserSerializer(data=profile_data)
+        if my_user.is_valid():
+            my_user.create(profile_data,user)
+
         return user

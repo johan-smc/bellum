@@ -18,19 +18,14 @@ from bellum_app.serializers.user_serializer import UserSerializer
 
 class ObtainExpiringAuthToken(ObtainAuthToken):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
 
-        if serializer.authenticate():
+        if serializer.is_valid():
 
 
-            user = serializer.get_user()
-            print(user)
-            token, created = Token.objects.get_or_create(user=user)
+            token, created = Token.objects.get_or_create(user=serializer.validated_data['user'])
 
-            utc_now = datetime.datetime.utcnow()
-            if not created and token.created < utc_now - datetime.timedelta(hours=24):
-                token.delete()
-                token = Token.objects.create(user=serializer.object(['user']))
+            if not created :
                 token.created = datetime.datetime.utcnow()
                 token.save()
 
@@ -50,10 +45,9 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
 class UserViewSet(viewsets.ViewSet):
 
     def create(self, request, *args, **kwargs):
-
         user_serializer = UserSerializer(data=request.data)
         if user_serializer.is_valid():
-            user_serializer.create(user_serializer.data)
+            user_serializer.create(request.data)
             return Response(
                 user_serializer.data,
                 status=status.HTTP_201_CREATED

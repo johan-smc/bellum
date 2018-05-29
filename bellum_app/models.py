@@ -25,7 +25,7 @@ class Role(models.Model):
 
 
 
-class My_user(models.Model):
+class My_User(models.Model):
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100, unique=True)
@@ -51,7 +51,7 @@ class My_user(models.Model):
         self.private_key = key
         self.public_key = key.publickey()
 
-        super(My_user, self).save(*args,**kwargs)
+        super(My_User, self).save(*args,**kwargs)
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
@@ -59,7 +59,7 @@ class Group(models.Model):
     modification_time = models.DateTimeField()
     description = models.CharField(max_length=500)
     users = models.ManyToManyField(
-        'My_user',
+        'My_User',
         related_name='groups'
     )
 
@@ -74,11 +74,11 @@ class INode(models.Model):
     password = models.CharField(max_length=400)
     last_hash = models.CharField(max_length=400)
     owner = models.OneToOneField(
-        My_user,
+        My_User,
         on_delete=models.CASCADE
     )
     users = models.ManyToManyField(
-        'My_user',
+        'My_User',
         related_name='inodes',
         through='User_Inode'
     )
@@ -89,7 +89,7 @@ class INode(models.Model):
     )
 
 class User_Inode(models.Model):
-    user = models.ForeignKey(My_user, on_delete=models.CASCADE)
+    user = models.ForeignKey(My_User, on_delete=models.CASCADE)
     inode = models.ForeignKey(INode, on_delete=models.CASCADE)
     permission = models.IntegerField()
 
