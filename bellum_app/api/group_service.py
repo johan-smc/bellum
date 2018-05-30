@@ -16,3 +16,6 @@ def usrJoin(self,data):
 def usrUnJoin(self,data):
     instance = Group.objects.get(id=data["idGroup"])
     return instance.usrUnJoin(data)
+
+def get_group(group_id):
+    return Group.objects.get(id=group_id)

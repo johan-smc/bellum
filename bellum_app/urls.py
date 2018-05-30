@@ -12,5 +12,7 @@ urlpatterns = [
     path('upload_file/', views.upload_file),
     path('del_file/',views.del_file),
     path('create_folder/', views.create_folder),
-    path('update_file/', views.update_file)
+    path('update_file/', views.update_file),
+    path('inode_to_user/', views.inode_user),
+    path('inode_to_group/', views.inode_group),
 ]
