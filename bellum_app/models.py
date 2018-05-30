@@ -2,17 +2,21 @@ from django.db import models
 from hashlib import  sha3_384
 from Crypto.PublicKey import RSA
 from datetime import  datetime,timedelta
-import pytz
+import pytz,os
 
 from django.contrib.auth.models import User
 # token
-from rest_framework.authentication import  TokenAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework import exceptions
+
 from django.core.exceptions import ObjectDoesNotExist
 
 
 from bellum.settings import FILE_ROOT
+
+
+
 # Create your models here.
 
 TYPE_CHOICES = (
@@ -116,7 +120,7 @@ class INode(models.Model):
     )
     type = models.CharField(max_length=5,choices=TYPE_CHOICES)
     #TODO Changue password
-    password = models.CharField(max_length=400,default="temp")
+    password = models.CharField(max_length=400,default='0123456789abcdef')
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     modification_time = models.DateTimeField(default=datetime.now, blank=True)
     last_hash = models.CharField(max_length=400 , blank=True)
@@ -144,6 +148,8 @@ class INode(models.Model):
         filehash = sha3_384(filehash)
         self.last_hash = filehash.hexdigest()
         self.last_user_mod = self.owner
+        print("---------------")
+        print(self.password)
         super(INode, self).save(*args, **kwargs)
 
 class User_Inode(models.Model):
