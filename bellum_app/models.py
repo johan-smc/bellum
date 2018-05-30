@@ -10,6 +10,8 @@ from rest_framework.authentication import  TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework import exceptions
 
+
+from bellum.settings import FILE_ROOT
 # Create your models here.
 
 TYPE_CHOICES = (
@@ -20,6 +22,10 @@ ROLE_CHOICES = (
     ('ADM','Administrator'),
     ('USR', 'User')
 )
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return FILE_ROOT+'/user_{0}/{1}'.format(instance.owner.id, filename)
 
 class Role(models.Model):
     name = models.CharField(max_length=4,choices=ROLE_CHOICES)
@@ -68,17 +74,26 @@ class Group(models.Model):
 
 class INode(models.Model):
     name = models.CharField(max_length=100)
-    path = models.CharField(max_length=300)
-    type = models.CharField(max_length=5,choices=TYPE_CHOICES)
-    creation_field = models.DateTimeField()
-    modification_time = models.DateTimeField()
-    permission = models.IntegerField(default=0)
-    password = models.CharField(max_length=400)
-    last_hash = models.CharField(max_length=400)
-    owner = models.OneToOneField(
+    file = models.FileField(
+        blank=False, null=False,upload_to=user_directory_path
+    )
+    owner = models.ForeignKey(
         My_User,
+        related_name='My_User',
         on_delete=models.CASCADE
     )
+    permission = models.IntegerField(default=0)
+    #
+    last_user_mod = models.ForeignKey(
+        My_User,
+        related_name='My_User2',
+        on_delete=models.CASCADE
+    )
+    type = models.CharField(max_length=5,choices=TYPE_CHOICES)
+    password = models.CharField(max_length=400)
+    creation_field = models.DateTimeField(default=datetime.now, blank=True)
+    modification_time = models.DateTimeField(default=datetime.now, blank=True)
+    last_hash = models.CharField(max_length=400 , blank=True)
     users = models.ManyToManyField(
         'My_User',
         related_name='inodes',
@@ -89,6 +104,21 @@ class INode(models.Model):
         related_name='inodes',
         through='Group_Inode'
     )
+    father = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+    )
+
+    def update_date(self):
+        self.modification_time = datetime.now()
+
+    def save (self,*args,**kwargs):
+        filehash = self.file.__str__().encode()
+        filehash = sha3_384(filehash)
+        self.last_hash = filehash.hexdigest()
+        self.last_user_mod = self.owner
+        super(INode, self).save(*args, **kwargs)
 
 class User_Inode(models.Model):
     user = models.ForeignKey(My_User, on_delete=models.CASCADE)
@@ -121,3 +151,6 @@ class ExpiringTokenAuthentication(TokenAuthentication):
             raise  exceptions.AuthenticationFailed('Token has expired')
 
         return token.user, token
+
+
+
