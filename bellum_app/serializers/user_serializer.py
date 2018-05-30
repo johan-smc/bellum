@@ -39,3 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
             my_user.create(profile_data,user)
 
         return user
+
+
+    def INodeSerializer(self):
+        pass

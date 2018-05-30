@@ -10,3 +10,10 @@ def delete(file_id):
     file.delete()
     return True
 
+def get_all_inodes(id):
+    try:
+
+        lista = INode.objects.filter(father=id)
+        return lista
+    except INode.DoesNotExist:
+        return None
