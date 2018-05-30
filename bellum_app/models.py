@@ -1,6 +1,7 @@
 from django.db import models
 from hashlib import  sha3_384
 from Crypto.PublicKey import RSA
+from Crypto import  Random
 from datetime import  datetime,timedelta
 import pytz,os
 
@@ -120,7 +121,8 @@ class INode(models.Model):
     )
     type = models.CharField(max_length=5,choices=TYPE_CHOICES)
     #TODO Changue password
-    password = models.CharField(max_length=400,default='0123456789abcdef')
+    #password = models.CharField(max_length=400,default=b'\xbf\xc0\x85)\x10nc\x94\x02)j\xdf\xcb\xc4\x94\x9d(\x9e[EX\xc8\xd5\xbfI{\xa2$\x05(\xd5\x18')
+    password = models.CharField(max_length=400,blank=True)
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     modification_time = models.DateTimeField(default=datetime.now, blank=True)
     last_hash = models.CharField(max_length=400 , blank=True)
@@ -149,7 +151,7 @@ class INode(models.Model):
         self.last_hash = filehash.hexdigest()
         self.last_user_mod = self.owner
         print("---------------")
-        print(self.password)
+        self.password  = Random.get_random_bytes(32)
         super(INode, self).save(*args, **kwargs)
 
 class User_Inode(models.Model):

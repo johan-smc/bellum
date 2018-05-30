@@ -31,6 +31,7 @@ class File_Serializer(serializers.ModelSerializer):
         my_user = My_User.objects.get(id=id)
         '''
         file = INode.objects.create( **validated_data)
+        encrypt_file(file.file.path,file.password)
         return file
 
 
