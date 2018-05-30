@@ -215,3 +215,39 @@ bellum/__pycache__/
 bellum_app/migrations/0001_initial.py
 # End of https://www.gitignore.io/api/macos
 file/
+
+# Created by https://www.gitignore.io/api/angular
+
+### Angular ###
+## Angular ##
+# compiled output
+frontEnd/dist
+frontEnd/tmp
+frontEnd/app/**/*.js
+frontEnd/app/**/*.js.map
+
+# dependencies
+frontEnd/node_modules
+frontEnd/bower_components
+
+# IDEs and editors
+frontEnd/.idea
+
+# misc
+frontEnd/.sass-cache
+frontEnd/connect.lock
+frontEnd/coverage/*
+frontEnd/libpeerconnection.log
+frontEnd/npm-debug.log
+frontEnd/testem.log
+frontEnd/typings
+
+# e2e
+frontEnd/e2e/*.js
+frontEnd/e2e/*.map
+
+#System Files
+frontEnd/.DS_Store
+
+
+# End of https://www.gitignore.io/api/angular
