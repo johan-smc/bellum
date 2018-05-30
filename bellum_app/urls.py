@@ -8,7 +8,9 @@ urlpatterns = [
     path('register_group/', views.register_group),
     path('get_groups/', views.get_groups),
     path('del_group/', views.del_group),
-    path('usr_to_group/', views.usr_to_group)
-
-
+    path('usr_to_group/', views.usr_to_group),
+    path('upload_file/', views.upload_file),
+    path('del_file/',views.del_file),
+    path('create_folder/', views.create_folder),
+    path('update_file/', views.update_file)
 ]
