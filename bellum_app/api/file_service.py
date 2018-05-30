@@ -9,3 +9,4 @@ def delete(file_id):
     os.remove(file.file.path)
     file.delete()
     return True
+

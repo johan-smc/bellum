@@ -10,8 +10,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 from bellum_app.api import  user_service, file_service
-from bellum_app.models import User
-from bellum_app.serializers.file_serializer import File_Serializer
+from bellum_app.models import User,INode
+from bellum_app.serializers.file_serializer import File_Serializer, Folder_Serializer
 
 from bellum_app.serializers.user_serializer import UserSerializer
 # Create your views here.
@@ -78,7 +78,7 @@ class FileViewSet(viewsets.ViewSet):
         request.POST._mutable = True
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
 
-        request.data['owner'] = user_service.get_pk(token);
+        request.data['owner'] = user_service.get_pk(token)
         file_serializer = File_Serializer(data=request.data)
         if file_serializer.is_valid():
             file_serializer.save()
@@ -103,6 +103,43 @@ class FileViewSet(viewsets.ViewSet):
             "Not deleted",
             status=status.HTTP_400_BAD_REQUEST
         )
+    def update_file(self,request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+
+        request.data['owner'] = user_service.get_pk(token)
+        instance = INode.objects.get(id=request.data['id'])
+        file_serializer = File_Serializer(instance,data=request.data)
+        if file_serializer.is_valid():
+            file_serializer.save()
+            #file_serializer.create(request.data)
+            return Response(
+                file_serializer.data,
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            file_serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    def create_folder(self,request):
+        request.POST._mutable = True
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+
+        request.data['owner'] = user_service.get_pk(token);
+        folder_serializer = Folder_Serializer(data=request.data)
+        if folder_serializer.is_valid():
+            folder_serializer.save()
+            # file_serializer.create(request.data)
+            return Response(
+                folder_serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            folder_serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 register =UserViewSet.as_view(dict(post='create'))
@@ -110,3 +147,5 @@ get_users = UserViewSet.as_view(dict(get='get'))
 obtain_expiring_auth_token = ObtainExpiringAuthToken.as_view()
 upload_file = FileViewSet.as_view(dict(post='create'))
 del_file =  FileViewSet.as_view(dict(delete='delete'))
+create_folder = FileViewSet.as_view(dict(post='create_folder'))
+update_file = FileViewSet.as_view(dict(put='update_file'))

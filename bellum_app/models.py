@@ -79,10 +79,16 @@ class INode(models.Model):
     )
     owner = models.ForeignKey(
         My_User,
+        related_name='My_User',
         on_delete=models.CASCADE
     )
     permission = models.IntegerField(default=0)
     #
+    last_user_mod = models.ForeignKey(
+        My_User,
+        related_name='My_User2',
+        on_delete=models.CASCADE
+    )
     type = models.CharField(max_length=5,choices=TYPE_CHOICES)
     password = models.CharField(max_length=400)
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
@@ -98,10 +104,20 @@ class INode(models.Model):
         related_name='inodes',
         through='Group_Inode'
     )
+    father = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+    )
+
+    def update_date(self):
+        self.modification_time = datetime.now()
+
     def save (self,*args,**kwargs):
         filehash = self.file.__str__().encode()
         filehash = sha3_384(filehash)
         self.last_hash = filehash.hexdigest()
+        self.last_user_mod = self.owner
         super(INode, self).save(*args, **kwargs)
 
 class User_Inode(models.Model):
