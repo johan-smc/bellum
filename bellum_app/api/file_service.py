@@ -12,6 +12,7 @@ def delete(file_id):
     return True
 
 
+
 def get_inode(file_id):
     return INode.objects.get(id=file_id)
 
@@ -58,3 +59,11 @@ def get_permissions(user_id,file_id):
             permissions = max(permissions, group_inode.permission)
 
     return permissions
+
+def get_all_inodes(id):
+    try:
+
+        lista = INode.objects.filter(father=id)
+        return lista
+    except INode.DoesNotExist:
+        return None

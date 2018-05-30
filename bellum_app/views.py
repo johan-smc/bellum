@@ -37,6 +37,7 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
 
             response_data = {'token': token.key}
             return Response(
+
                 response_data,
                 status=status.HTTP_200_OK
             )
@@ -44,6 +45,7 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
 
 
 class GroupViewSet(viewsets.ViewSet):
@@ -234,6 +236,7 @@ class FileViewSet(viewsets.ViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+
     def relation_user(self, request):
         user_file_serializer = UserFileSerializer(data=request.data)
         #######
@@ -308,8 +311,24 @@ class FileViewSet(viewsets.ViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+    def get_inodes(self, request):
+        type = request.data['type']
+        if type == 'DIR':
+            resp = file_service.get_all_inodes(request.data['father'])
+            folder_serializer = Folder_Serializer(
+                resp,
+                many=True
+            )
+            return Response(
+                folder_serializer.data,
+                status=status.HTTP_200_OK
+            )
+        else:
+            return  Response(
+                "Not a directory",
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-register = UserViewSet.as_view(dict(post='create'))
 
 get_users = UserViewSet.as_view(dict(get='get'))
 register_group = GroupViewSet.as_view(dict(post='create', put='update'))
@@ -323,3 +342,7 @@ create_folder = FileViewSet.as_view(dict(post='create_folder'))
 update_file = FileViewSet.as_view(dict(put='update_file'))
 inode_user = FileViewSet.as_view(dict(post='relation_user', delete='delete_user'))
 inode_group = FileViewSet.as_view(dict(post='relation_group', delete='delete_group'))
+get_inodes = FileViewSet.as_view(dict(post='get_inodes'))
+register = UserViewSet.as_view(dict(post='create'))
+
+

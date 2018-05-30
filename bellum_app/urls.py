@@ -15,4 +15,5 @@ urlpatterns = [
     path('update_file/', views.update_file),
     path('inode_to_user/', views.inode_user),
     path('inode_to_group/', views.inode_group),
+    path('get_inodes/', views.get_inodes)
 ]
