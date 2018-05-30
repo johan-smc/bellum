@@ -11,6 +11,7 @@ import os
 
 
 class File_Serializer(serializers.ModelSerializer):
+    type = serializers.CharField(required=False, default="FILE")
     file = serializers.FileField(write_only=True)
     class Meta:
         model = INode
@@ -26,6 +27,7 @@ class File_Serializer(serializers.ModelSerializer):
         print(validated_data)
         my_user = My_User.objects.get(id=id)
         '''
+
         return INode.objects.create( **validated_data)
 
 
@@ -47,7 +49,7 @@ class File_Serializer(serializers.ModelSerializer):
 
 
 class Folder_Serializer(serializers.ModelSerializer):
-
+    type = serializers.CharField(required=False,default="DIR")
     class Meta:
         model = INode
         fields = ('name','type','password','owner','father')

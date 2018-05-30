@@ -115,7 +115,8 @@ class INode(models.Model):
         on_delete=models.CASCADE
     )
     type = models.CharField(max_length=5,choices=TYPE_CHOICES)
-    password = models.CharField(max_length=400)
+    #TODO Changue password
+    password = models.CharField(max_length=400,default="temp")
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     modification_time = models.DateTimeField(default=datetime.now, blank=True)
     last_hash = models.CharField(max_length=400 , blank=True)
