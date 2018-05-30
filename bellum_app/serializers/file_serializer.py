@@ -1,3 +1,5 @@
+import asyncio
+
 from rest_framework import  serializers
 from django.db import models
 from datetime import  datetime,timedelta
@@ -7,10 +9,12 @@ from bellum_app.models import INode,My_User
 from datetime import datetime
 from django.contrib.auth.models import User
 from hashlib import  sha3_384
+from bellum_app.api.os_service import encrypt_file
 import os
 
 
 class File_Serializer(serializers.ModelSerializer):
+    type = serializers.CharField(required=False, default="FILE")
     file = serializers.FileField(write_only=True)
     class Meta:
         model = INode
@@ -26,7 +30,9 @@ class File_Serializer(serializers.ModelSerializer):
         print(validated_data)
         my_user = My_User.objects.get(id=id)
         '''
-        return INode.objects.create( **validated_data)
+        file = INode.objects.create( **validated_data)
+        encrypt_file(file.file.path,file.password)
+        return file
 
 
     def update(self, instance, validated_data):
@@ -47,7 +53,7 @@ class File_Serializer(serializers.ModelSerializer):
 
 
 class Folder_Serializer(serializers.ModelSerializer):
-
+    type = serializers.CharField(required=False,default="DIR")
     class Meta:
         model = INode
         fields = ('name','type','password','owner','father')
