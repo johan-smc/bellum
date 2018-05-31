@@ -215,6 +215,7 @@ class FileViewSet(viewsets.ViewSet):
         )
 
     def delete(self, request):
+        request.POST._mutable = True
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         #######
         user_id = request.data['owner'] = user_service.get_pk(token)
@@ -385,7 +386,7 @@ del_group = GroupViewSet.as_view(dict(post='removeG'))
 usr_to_group = GroupViewSet.as_view(dict(post='usrGroup', delete="unUsrgroup"))
 obtain_expiring_auth_token = ObtainExpiringAuthToken.as_view()
 upload_file = FileViewSet.as_view(dict(post='create'))
-del_file = FileViewSet.as_view(dict(delete='delete'))
+del_file = FileViewSet.as_view(dict(post='delete'))
 create_folder = FileViewSet.as_view(dict(post='create_folder'))
 update_file = FileViewSet.as_view(dict(put='update_file'))
 inode_user = FileViewSet.as_view(dict(post='relation_user', delete='delete_user'))
