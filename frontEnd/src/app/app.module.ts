@@ -13,6 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { EndPointService } from './services/end-point.service';
+import { HomeComponent } from './components/home/home.component';
 
 const appRoutes: Routes =[
     {path : '' , component : LoginComponent },
@@ -23,6 +24,7 @@ const appRoutes: Routes =[
   declarations: [
     AppComponent,
     LoginComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
