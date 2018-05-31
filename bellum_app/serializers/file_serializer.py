@@ -64,7 +64,7 @@ class File_Serializer(serializers.ModelSerializer):
         instance.update_date()
         instance.last_hash = filehash.hexdigest()
         instance.save()
-
+        os_service.encrypt_file(instance.file.path,instance.password)
         os_service.write_in_log("update file the user: " + instance.owner.user_django.username, instance.owner.id)
         return instance
 
