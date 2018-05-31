@@ -42,7 +42,9 @@
               <span  class="glyphicon glyphicon-folder-open" dowload> </span>
             </button>
               {{file.name}}
-
+              <div *ngIf="file.change" class="alert alert-danger">
+                <div>Changue file</div>
+              </div>
         </div>
       </div>
     </div>

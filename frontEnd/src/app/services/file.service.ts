@@ -22,6 +22,14 @@ export class FileService {
     let ep = this.endPoint.prepEndPoint('get_inodes/');
     return this.http.post(ep, father,{headers:headers})
   }
+  getAllFiles()
+  {
+    let headers = new Headers();
+    headers.append('Content-Type','application/json');
+    headers.append('Authorization','Token '+this.authService.getToken());
+    let ep = this.endPoint.prepEndPoint('get_inodes/');
+    return this.http.get(ep,{headers:headers})
+  }
 
   getFile(file)
   {
@@ -62,5 +70,13 @@ export class FileService {
     return this.http.post(ep, father,{headers:headers})
   }
 
+  unionFileGroup(info)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type','application/json');
+    headers.append('Authorization','Token '+this.authService.getToken());
+    let ep = this.endPoint.prepEndPoint('inode_to_group/');
+    return this.http.post(ep, info,{headers:headers})
+  }
 
 }

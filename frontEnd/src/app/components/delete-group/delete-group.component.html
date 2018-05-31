@@ -7,8 +7,8 @@
 
             <div class="form-group">
 
-              <select type="text" class="form-control" id='sel1'>
-                <option [ngValue]="group_sel" *ngFor="let group of groups" >{{group.name}}</option>
+              <select type="text" class="form-control" id='sel1' [(ngModel)]="group_sel" name = "group_sel">
+                <option [ngValue]="group" *ngFor="let group of groups" >{{group.name}}</option>
               </select>
 
             </div>

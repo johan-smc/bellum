@@ -23,6 +23,8 @@ import { CoreComponent } from './components/core/core.component';
 import { CreateGroupComponent } from './components/create-group/create-group.component';
 import { DeleteGroupComponent } from './components/delete-group/delete-group.component'
 import { FileUploadModule } from 'ng2-file-upload';
+import { FileGroupComponent } from './components/file-group/file-group.component';
+import { UserGroupComponent } from './components/user-group/user-group.component';
 
 
 const appRoutes: Routes =[
@@ -31,6 +33,8 @@ const appRoutes: Routes =[
     {path : 'home' , component : HomeComponent },
     {path : 'create_group' , component : CreateGroupComponent },
     {path : 'delete_group' , component : DeleteGroupComponent },
+    {path : 'file_group' , component : FileGroupComponent },
+    {path : 'user_group' , component : UserGroupComponent },
     {path: '**', redirectTo: '/404'},
 ];
 
@@ -43,6 +47,8 @@ const appRoutes: Routes =[
     CoreComponent,
     CreateGroupComponent,
     DeleteGroupComponent,
+    FileGroupComponent,
+    UserGroupComponent,
   ],
   imports: [
     BrowserModule,

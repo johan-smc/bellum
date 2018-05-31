@@ -3,6 +3,7 @@ import { Component, OnInit,Input } from '@angular/core';
 import { FileService } from '../../services/file.service';
 import { AuthService } from '../../services/auth.service';
 import { GroupService } from '../../services/group.service';
+import { UserService } from '../../services/user.service';
 import { NgFlashMessageService } from 'ng-flash-messages';
 
 
@@ -24,6 +25,7 @@ export class CoreComponent implements OnInit {
     private ngFlashMessageService: NgFlashMessageService,
     private authService: AuthService,
     private groupService: GroupService,
+    private userService: UserService,
   ) {
     this.refresh(null);
    }
@@ -40,6 +42,14 @@ export class CoreComponent implements OnInit {
     this.fileService.getFiles(father).subscribe(data=>{
       data = JSON.parse(data['_body']);
       this.files = data;
+      this.userService.get_usr_id().subscribe(info=>{
+        info = JSON.parse(info['_body']);
+        for( var i =0 ; i < this.files.length ; ++i )
+        {
+          this.files[i]['change']=this.files[i]['last_user_mod']['id']!=info['id'];
+        }
+
+      });
     });
   }
   getFilesGroup(father_id)
@@ -52,6 +62,14 @@ export class CoreComponent implements OnInit {
     this.fileService.getFilesGroup(father).subscribe(data=>{
       data = JSON.parse(data['_body']);
       this.files = data;
+      this.userService.get_usr_id().subscribe(info=>{
+        info = JSON.parse(info['_body']);
+        for( var i =0 ; i < this.files.length ; ++i )
+        {
+          this.files[i]['change']=this.files[i]['last_user_mod']['id']!=info['id'];
+        }
+
+      });
     });
   }
   dowloadOnClick(id)
@@ -106,9 +124,8 @@ export class CoreComponent implements OnInit {
     // if(  diff > limit )
     //   return true;
     return false;
-
-
   }
+
   refresh(father)
   {
     if( this.idGroup == "" )
@@ -119,7 +136,6 @@ export class CoreComponent implements OnInit {
 
   ngDoCheck()
   {
-    console.log("estoy mirando "+ this.idFather);
     if( this.idGroup != this.groupService.getGroup() )
     {
       this.idGroup = this.groupService.getGroup();

@@ -72,6 +72,13 @@ def get_all_inodes(id,id_user):
     except INode.DoesNotExist:
         return None
 
+def get_all_inodes_(id_user):
+    try:
+        lista = INode.objects.filter( owner= id_user)
+        return lista
+    except INode.DoesNotExist:
+        return None
+
 def get_all_inodes_group(id,id_group):
     try:
         group = group_service.get_group(id_group)
