@@ -9,16 +9,24 @@ from bellum_app.models import INode,My_User
 from datetime import datetime
 from django.contrib.auth.models import User
 from hashlib import  sha3_384
-from bellum_app.api.os_service import encrypt_file
+from bellum_app.api import os_service
+from bellum_app.serializers import user_file_serializer, user_serializer
 import os
+from simplecrypt import encrypt, decrypt
+
 
 
 class File_Serializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     type = serializers.CharField(required=False, default="FILE")
     file = serializers.FileField(write_only=True)
+    password = serializers.Field(write_only=True,required=False)
+    last_hash = serializers.ReadOnlyField()
+    last_user_mod = user_serializer.My_UserSerializer(read_only=True)
+    user_inode_set = user_file_serializer.UserFileSerializer(read_only=True,many=True)
     class Meta:
         model = INode
-        fields = ('name','type','password','file','owner','father')
+        fields = ('id','name','type','password','file','owner','father','last_hash','user_inode_set','last_user_mod')
 
     def create(self, validated_data):
         print(validated_data)
@@ -31,7 +39,9 @@ class File_Serializer(serializers.ModelSerializer):
         my_user = My_User.objects.get(id=id)
         '''
         file = INode.objects.create( **validated_data)
-        encrypt_file(file.file.path,file.password)
+        print(file.password)
+        os_service.encrypt_file(file.file.path,file.password)
+        os_service.write_in_log("Create file the user: "+file.owner.user_django.username , file.owner.id)
         return file
 
 
@@ -49,14 +59,20 @@ class File_Serializer(serializers.ModelSerializer):
         instance.update_date()
         instance.last_hash = filehash.hexdigest()
         instance.save()
+        os_service.write_in_log("update file the user: " + instance.owner.user_django.username, instance.owner.id)
         return instance
 
 
 class Folder_Serializer(serializers.ModelSerializer):
+    last_hash = serializers.ReadOnlyField()
+    id = serializers.ReadOnlyField()
     type = serializers.CharField(required=False,default="DIR")
+    password = serializers.Field(write_only=True,required=False)
+    user_inode_set = user_file_serializer.UserFileSerializer(read_only=True, many=True)
+    last_user_mod = user_serializer.My_UserSerializer(read_only=True)
     class Meta:
         model = INode
-        fields = ('name','type','password','owner','father')
+        fields = ('id','name','type','password','owner','father','last_hash','user_inode_set','last_user_mod')
 
     def create(self, validated_data):
 

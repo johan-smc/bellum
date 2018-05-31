@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(user).subscribe(data =>{
       data = JSON.parse(data['_body']);
       if(data['success']){
-        this.authService.storeUserData(data['token']);
+        this.authService.storeUserData(data['token'],data['date']);
         this.ngFlashMessageService.showFlashMessage({ messages:["Welcon to Bellum"], timeout : 1000, type : 'success'} );
         this.router.navigate(['/home']);
       }

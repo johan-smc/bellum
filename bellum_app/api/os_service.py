@@ -1,6 +1,7 @@
 import os, random, struct
 from Crypto.Cipher import AES
 from simplecrypt import encrypt, decrypt
+from bellum_app.api import user_service
 import asyncio
 
 from Crypto import Random
@@ -36,6 +37,11 @@ def decrypt_file(file_name, key):
     with open(file_name[:-4], 'wb') as fo:
         fo.write(dec)
 
+
+def write_in_log(message,user_id):
+    user = user_service.get_myuser(user_id)
+    file = open(user.logs,'a')
+    file.write(message)
 
 '''
 #################################################################################
