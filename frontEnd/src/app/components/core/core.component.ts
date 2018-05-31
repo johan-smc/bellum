@@ -64,7 +64,7 @@ export class CoreComponent implements OnInit {
   }
   uploadFileToActivity() {
     this.fileService.postFile(this.fileToUpload,this.namefile,this.idFather).subscribe(data => {
-
+      console.log(data);
       this.ngFlashMessageService.showFlashMessage({ messages:["Save file correct"], timeout : 1000, type : 'success'} );
       this.getFiles(this.idFather);
       }, error => {

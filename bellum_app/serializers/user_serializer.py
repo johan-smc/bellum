@@ -8,7 +8,7 @@ import os
 
 
 class My_UserSerializer(serializers.ModelSerializer):
-    user_django = serializers.ReadOnlyField(required=False)
+    #user_django = serializers.ReadOnlyField(required=False)
     role = serializers.Field(required=False,write_only=True)
     logs = serializers.CharField(required=False)
     password_change = serializers.ReadOnlyField(required=False)

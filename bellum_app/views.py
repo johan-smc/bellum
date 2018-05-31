@@ -332,6 +332,7 @@ class FileViewSet(viewsets.ViewSet):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         user_id= user_service.get_pk(token);
         resp = file_service.get_all_inodes(request.data['father'], user_id)
+        print(resp)
         folder_serializer = Folder_Serializer(
             resp,
             many=True
