@@ -34,6 +34,7 @@ class My_UserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     my_user = My_UserSerializer(required=False)
+    username = serializers.ReadOnlyField(required=False)
 
     class Meta:
         model = User
@@ -50,6 +51,6 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-
-    def INodeSerializer(self):
-        pass
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        return instance

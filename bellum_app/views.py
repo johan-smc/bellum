@@ -11,7 +11,7 @@ from rest_framework import status, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from bellum_app.models import Group
+from bellum_app.models import Group, My_User
 
 from bellum_app.api import user_service, file_service,os_service
 from bellum_app.models import User, INode
@@ -201,7 +201,27 @@ class UserViewSet(viewsets.ViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
+    def update_pass(self,request):
+        request.POST._mutable = True
 
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        request.data['owner'] = user_service.get_pk(token)
+        user_id = request.data['owner']
+
+        instance = user_service.get_myuser(user_id)
+
+        user_serializer = UserSerializer(instance, data=request.data)
+        if user_serializer.is_valid():
+
+            return Response(
+                "changed",
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            user_serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
 class FileViewSet(viewsets.ViewSet):
 
     def create(self, request):
@@ -417,4 +437,4 @@ get_all_groups = GroupViewSet.as_view(dict(get='get_all_groups'))
 get_usrid = UserViewSet.as_view(dict(get='get_usrid'))
 get_groups_owner = GroupViewSet.as_view(dict(get='get_groups_owner'))
 get_file = FileViewSet.as_view(dict(post='get_file'))
-
+update_pass = UserViewSet.as_view(dict(post='update_pass'))

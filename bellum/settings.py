@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bellum_app.apps.BellumAppConfig',
     'rest_framework.authtoken',
     'corsheaders',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

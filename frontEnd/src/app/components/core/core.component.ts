@@ -87,12 +87,12 @@ export class CoreComponent implements OnInit {
   }
   changeDate()
   {
-    var dateNow = new Date();
-    var dateU = new Date(this.authService.getDate());
-    var limit : number = 2629746000;
-    var diff: number = dateNow-dateU;
-    if(  diff > limit )
-      return true;
+    // var dateNow = new Date();
+    // var dateU = new Date(this.authService.getDate());
+    // var limit : number = 2629746000;
+    // var diff: number = dateNow-dateU;
+    // if(  diff > limit )
+    //   return true;
     return false;
 
 
