@@ -27,6 +27,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { FileGroupComponent } from './components/file-group/file-group.component';
 import { UserGroupComponent } from './components/user-group/user-group.component';
 import { AboutComponent } from './components/about/about.component';
+import { DeleteFileComponent } from './components/delete-file/delete-file.component';
 
 
 const appRoutes: Routes =[
@@ -35,6 +36,7 @@ const appRoutes: Routes =[
     {path : 'home' , component : HomeComponent },
     {path : 'create_group' , component : CreateGroupComponent },
     {path : 'delete_group' , component : DeleteGroupComponent },
+    {path : 'delete_file' , component : DeleteFileComponent },
     {path : 'change_pass' , component : ChangePasswordComponent },
     {path : 'file_group' , component : FileGroupComponent },
     {path : 'user_group' , component : UserGroupComponent },
@@ -55,6 +57,7 @@ const appRoutes: Routes =[
     FileGroupComponent,
     UserGroupComponent,
     AboutComponent,
+    DeleteFileComponent,
   ],
   imports: [
     BrowserModule,

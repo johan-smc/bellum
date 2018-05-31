@@ -78,5 +78,14 @@ export class FileService {
     let ep = this.endPoint.prepEndPoint('inode_to_group/');
     return this.http.post(ep, info,{headers:headers})
   }
+  delFile(info)
+  {
+    var token = this.authService.getToken();
+    let headers = new Headers();
+    headers.append('Content-Type','application/json');
+    headers.append('Authorization','Token '+token);
+    let ep = this.endPoint.prepEndPoint('del_file/');
+    return this.http.post(ep, info,{headers:headers})
+  }
 
 }

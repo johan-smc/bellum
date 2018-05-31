@@ -1,0 +1,20 @@
+<section>
+  <div class="wrapper">
+    <form #loginForm = "ngForm" (submit) = "onRegisterSubmit()" class="form-signin">
+
+      <ng-flash-message></ng-flash-message>
+      <h2  class="form-signin-heading">Delete File</h2>
+
+            <div class="form-group">
+
+              <select type="text" class="form-control" id='sel1' [(ngModel)]="file_sel" name = "file_sel">
+                <option [ngValue]="file" *ngFor="let file of files" >{{file.name}}</option>
+              </select>
+
+            </div>
+      <button class="btn btn-primary btn-block" type="submit">Delete File</button>
+      <a href='/home'>Home</a>
+
+    </form>
+  </div>
+</section>
