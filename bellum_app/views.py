@@ -36,14 +36,17 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
                 token.save()
 
             response_data = {'token': token.key}
-            return Response(
+            response_data['success'] = True
 
+            return Response(
                 response_data,
                 status=status.HTTP_200_OK
             )
+        errors = serializer.errors
+        errors['success'] = False
         return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            errors,
+            status=status.HTTP_200_OK
         )
 
 
