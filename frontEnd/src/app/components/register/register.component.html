@@ -1,0 +1,37 @@
+<section>
+  <div class="wrapper">
+    <form #loginForm = "ngForm" (submit) = "onRegisterSubmit()" class="form-signin">
+      <ng-flash-message></ng-flash-message>
+      <h2  class="form-signin-heading">Register</h2>
+      <div *ngIf="!userNameToken" class="alert alert-danger">
+            <div>User name is token.</div>
+      </div>
+      <input type="text" class="form-control" [(ngModel)] = "username" name="username" placeholder="User Name" required="" autofocus="" />
+      <p>
+        Requerements:<br>
+        * At least 8 characters<br>
+        * One capital letter<br>
+        * One number<br>
+        * One special charater<br>
+      </p>
+      <div *ngIf="!strongerPassword" class="alert alert-danger">
+        <div>Not stronger password.</div>
+      </div>
+      <input type="password" class="form-control" [(ngModel)] = "password" name="password" placeholder="Password" required=""/>
+      <div *ngIf="!samePassword" class="alert alert-danger">
+        <div>Passwords not equal.</div>
+      </div>
+      <input type="password" class="form-control" [(ngModel)] = "password_confirm" name="password_confirm" placeholder="Confirm password" required=""/>
+      <input type="text" class="form-control" [(ngModel)] = "name" name="name" placeholder="Name" required=""/>
+      <div *ngIf="!validEmail" class="alert alert-danger">
+            <div>Insert a valid email.</div>
+      </div>
+      <div *ngIf="!emailToken" class="alert alert-danger">
+            <div>Email is token.</div>
+      </div>
+      <input type="text" class="form-control" [(ngModel)] = "email" name="email" placeholder="Email" required=""/>
+      <button class="btn btn-primary btn-block" type="submit">Register</button>
+      <a [routerLink]="['']">Log in</a>
+    </form>
+  </div>
+</section>

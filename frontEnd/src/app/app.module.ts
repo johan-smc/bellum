@@ -13,10 +13,13 @@ import { LoginComponent } from './components/login/login.component';
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { EndPointService } from './services/end-point.service';
+import { UserService } from './services/user.service';
 import { HomeComponent } from './components/home/home.component';
+import { RegisterComponent } from './components/register/register.component';
 
 const appRoutes: Routes =[
     {path : '' , component : LoginComponent },
+    {path : 'register' , component : RegisterComponent },
     {path: '**', redirectTo: '/404'},
 ];
 
@@ -25,6 +28,7 @@ const appRoutes: Routes =[
     AppComponent,
     LoginComponent,
     HomeComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,6 +41,7 @@ const appRoutes: Routes =[
     ValidateService,
     AuthService,
     EndPointService,
+    UserService,
   ],
   bootstrap: [AppComponent]
 })

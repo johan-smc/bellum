@@ -13,8 +13,8 @@ import { NgFlashMessageService } from 'ng-flash-messages';
 })
 export class LoginComponent implements OnInit {
 
-  username : string;
-  password : string;
+  private username : string;
+  private password : string;
 
   constructor(
     private validateService : ValidateService ,
