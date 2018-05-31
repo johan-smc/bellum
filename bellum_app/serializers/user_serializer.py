@@ -1,7 +1,7 @@
 from rest_framework import  serializers
 from bellum_app.models import My_User,Role
 from django.contrib.auth.models import User
-
+from datetime import  datetime
 from hashlib import  sha3_384
 from bellum.settings import FILE_ROOT
 import os
@@ -29,6 +29,12 @@ class My_UserSerializer(serializers.ModelSerializer):
         open(path, 'w')
         return My_User.objects.create(user_django=user,**validated_data)
 
+    def update(self, instance, validated_data):
+        print("--------->",validated_data['password'])
+        instance.user_django.set_password(validated_data['password'])
+        instance.user_django.save()
+        instance.modification_time = datetime.now()
+        return instance
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -49,7 +55,3 @@ class UserSerializer(serializers.ModelSerializer):
             my_user.create(profile_data,user)
 
         return user
-
-
-    def INodeSerializer(self):
-        pass

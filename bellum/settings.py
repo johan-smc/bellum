@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django_extensions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bellum_app.apps.BellumAppConfig',

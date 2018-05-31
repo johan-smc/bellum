@@ -11,7 +11,7 @@ from rest_framework import status, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from bellum_app.models import Group
+from bellum_app.models import Group, My_User
 
 from bellum_app.api import user_service, file_service,os_service
 from bellum_app.models import User, INode
@@ -201,6 +201,17 @@ class UserViewSet(viewsets.ViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
+    def update(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id = user_service.get_pk(token)
+        instance = My_User.objects.get(id=user_id)
+
+        user_Serializer = My_UserSerializer(instance, data=request.data)
+        res = user_Serializer.update(instance, request.data)
+        return Response(
+            "Changed",
+            status=status.HTTP_202_ACCEPTED
+        )
 
 class FileViewSet(viewsets.ViewSet):
 
@@ -431,4 +442,4 @@ get_all_groups = GroupViewSet.as_view(dict(get='get_all_groups'))
 get_usrid = UserViewSet.as_view(dict(get='get_usrid'))
 get_groups_owner = GroupViewSet.as_view(dict(get='get_groups_owner'))
 get_file = FileViewSet.as_view(dict(post='get_file'))
-
+update_pass = UserViewSet.as_view(dict(post='update'))
