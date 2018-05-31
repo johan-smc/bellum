@@ -146,7 +146,8 @@ export class CoreComponent implements OnInit {
   replaceFile(id_file)
   {
     console.log(id_file);
-    this.fileService.uploadFile(this.fileToUpload,id_file).subscribe(data => {
+    console.log(this.fileToUpload)
+    this.fileService.uploadFile(this.fileToUpload,this.namefile,id_file).subscribe(data => {
       console.log(data);
       this.ngFlashMessageService.showFlashMessage({ messages:["Save file correct"], timeout : 1000, type : 'success'} );
       this.refresh(this.idFather);

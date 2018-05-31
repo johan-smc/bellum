@@ -24,6 +24,7 @@ class File_Serializer(serializers.ModelSerializer):
     last_hash = serializers.ReadOnlyField()
     last_user_mod = user_serializer.My_UserSerializer(read_only=True)
     user_inode_set = user_file_serializer.UserFileSerializer(read_only=True,many=True)
+    owner = user_serializer.My_UserSerializer(required=False)
     class Meta:
         model = INode
         fields = ('id','name','type','password','file','owner','father','last_hash','user_inode_set','last_user_mod')
@@ -46,11 +47,18 @@ class File_Serializer(serializers.ModelSerializer):
 
 
     def update(self, instance, validated_data):
+        '''
         try:
             os.remove(instance.file.path)
         except OSError:
             print("error")
+        '''
+        print("------------")
+        print(instance)
+        print(validated_data)
         instance.file = validated_data.get('file', instance.file)
+        instance.name = validated_data.get('name', instance.name)
+        instance.owner = validated_data.get('owner', instance.owner)
         filehash = instance.file.__str__().encode()
         filehash = sha3_384(filehash)
         instance.update_date()

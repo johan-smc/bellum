@@ -295,7 +295,8 @@ class FileViewSet(viewsets.ViewSet):
         ###
         '''
         instance = INode.objects.get(id=request.data['id'])
-        file_serializer = File_Serializer.update(instance, request.data)
+        instance.last_user_mod = user_service.get_myuser(user_id)
+        file_serializer = File_Serializer(instance, data=request.data)
         if file_serializer.is_valid():
             file_serializer.save()
             # file_serializer.create(request.data)
