@@ -7,7 +7,8 @@ def delete(file_id,user_id):
         file = INode.objects.get(id=file_id)
     except INode.DoesNotExist:
         return False
-    os_service.decrypt_file(file.file.path+'.enc',file.password)
+    if file.type == 'FILE':
+        os_service.decrypt_file(file.file.path+'.enc',file.password)
     #os.remove(file.file.path)
     user = user_service.get_myuser(user_id)
     os_service.write_in_log("Delete file the user: "+user.user_django.username+"\n", user.id )
