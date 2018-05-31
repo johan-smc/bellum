@@ -9,6 +9,7 @@ class My_GroupSerializer(serializers.ModelSerializer):
 
     id = serializers.ReadOnlyField()
     owner = serializers.ReadOnlyField(source='owner.id')
+
     class Meta:
         model = Group
         fields = ('name','description' , 'id' , 'owner')
@@ -17,6 +18,7 @@ class My_GroupSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['owner'] = user_service.get_myuser(validated_data['owner'])
         groupAux= Group.objects.create(**validated_data)
+        groupAux.users.add(validated_data['owner'])
         print("Creando grupo")
         print(groupAux.id)
         return groupAux
