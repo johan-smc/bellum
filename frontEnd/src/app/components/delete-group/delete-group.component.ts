@@ -32,7 +32,8 @@ export class DeleteGroupComponent implements OnInit {
     }
     this.deleteFilesService.delFile(info).subscribe(data =>{
       data = JSON.parse(data['_body']);
-      this.router.navigate(['/home']);
+      // this.router.navigate(['/home']);
+      window.location.href = '/home';
     });
 
   }

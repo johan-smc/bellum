@@ -30,6 +30,7 @@ export class CreateGroupComponent implements OnInit {
     this.groupService.create_group(group).subscribe(data =>{
       data = JSON.parse(data['_body']);
     });
-    this.router.navigate(['/home']);
+    // this.router.navigate(['/home']);
+    window.location.href = '/home';
   }
 }
