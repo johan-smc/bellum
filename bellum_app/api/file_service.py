@@ -1,14 +1,17 @@
-from bellum_app.api import user_service, group_service
+from bellum_app.api import user_service, group_service,os_service
 from bellum_app.models import INode,User_Inode,Group_Inode
 import os
 
-def delete(file_id):
+def delete(file_id,user_id):
     try:
         file = INode.objects.get(id=file_id)
     except INode.DoesNotExist:
         return False
     os.remove(file.file.path)
+    user = user_service.get_myuser(user_id)
+    os_service.write_in_log("Delete file the user: "+user.user_django.username, file.logs )
     file.delete()
+
     return True
 
 
@@ -29,6 +32,8 @@ def delete_user(user,inode):
 
 def delete_group(group,inode):
     try:
+        print(group)
+        print(inode)
         groups = Group_Inode.objects.filter(group=group, inode=inode)
         for group in groups:
             group.delete()
@@ -60,10 +65,9 @@ def get_permissions(user_id,file_id):
 
     return permissions
 
-def get_all_inodes(id):
+def get_all_inodes(id,id_user):
     try:
-
-        lista = INode.objects.filter(father=id)
+        lista = INode.objects.filter(father=id, owner= id_user)
         return lista
     except INode.DoesNotExist:
         return None

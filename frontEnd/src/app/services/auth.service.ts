@@ -9,6 +9,7 @@ import {EndPointService} from './end-point.service';
 export class AuthService {
   public token : any;
   private user : any;
+  private date : any;
   private loggedInStatus = false;
 
   constructor(
@@ -25,13 +26,23 @@ export class AuthService {
     return this.http.post(ep, user,{headers:headers})
 
   }
-  storeUserData(token){
+  storeUserData(token,date){
     localStorage.setItem('token',token);
+    localStorage.setItem('date',JSON.stringify(date));
     this.token = token;
+    this.date = date;
   }
-
   getToken()
   {
     return localStorage.getItem('token');
   }
+  getUser()
+  {
+    return JSON.parse(localStorage.getItem('user'));
+  }
+  getDate()
+  {
+    return localStorage.getItem('date');
+  }
+
 }

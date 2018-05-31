@@ -14,6 +14,7 @@ import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { EndPointService } from './services/end-point.service';
 import { UserService } from './services/user.service';
+import { FileService } from './services/file.service';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 
@@ -21,6 +22,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CoreComponent } from './components/core/core.component';
 import { CreateGroupComponent } from './components/create-group/create-group.component';
 import { DeleteGroupComponent } from './components/delete-group/delete-group.component'
+import { FileUploadModule } from 'ng2-file-upload';
+
 
 const appRoutes: Routes =[
     {path : '' , component : LoginComponent },
@@ -48,6 +51,7 @@ const appRoutes: Routes =[
     HttpModule,
     NgFlashMessagesModule.forRoot(),
     NgbModule.forRoot(),
+    FileUploadModule,
 
   ],
   providers: [
@@ -55,6 +59,7 @@ const appRoutes: Routes =[
     AuthService,
     EndPointService,
     UserService,
+    FileService,
   ],
   bootstrap: [AppComponent]
 })
