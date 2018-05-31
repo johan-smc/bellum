@@ -275,21 +275,27 @@ class FileViewSet(viewsets.ViewSet):
         )
 
     def update_file(self, request):
+
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
-        request.data['owner'] = user_service.get_pk(token)
+
+        user_id= user_service.get_pk(token)
 
         #####
-        user_id = request.data['owner']
+
+
+
         file_id = request.data['id']
+
+        '''
         if file_service.get_permissions(user_id, file_id) < 2:
             return Response(
                 "Insufficient permissions",
                 status=status.HTTP_400_BAD_REQUEST
             )
         ###
-
+        '''
         instance = INode.objects.get(id=request.data['id'])
-        file_serializer = File_Serializer(instance, data=request.data)
+        file_serializer = File_Serializer.update(instance, request.data)
         if file_serializer.is_valid():
             file_serializer.save()
             # file_serializer.create(request.data)

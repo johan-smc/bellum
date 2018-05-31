@@ -53,12 +53,10 @@ class File_Serializer(serializers.ModelSerializer):
         instance.file = validated_data.get('file', instance.file)
         filehash = instance.file.__str__().encode()
         filehash = sha3_384(filehash)
-        aux = instance.last_user_mod
-        instance.last_user_mod = instance.owner
-        instance.owner = aux
         instance.update_date()
         instance.last_hash = filehash.hexdigest()
         instance.save()
+
         os_service.write_in_log("update file the user: " + instance.owner.user_django.username, instance.owner.id)
         return instance
 

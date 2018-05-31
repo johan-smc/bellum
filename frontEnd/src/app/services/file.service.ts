@@ -87,5 +87,16 @@ export class FileService {
     let ep = this.endPoint.prepEndPoint('del_file/');
     return this.http.post(ep, info,{headers:headers})
   }
+  uploadFile(fileToUpload,id_file) {
 
+    let headers = new Headers();
+    headers.append('Authorization','Token '+this.authService.getToken());
+    let ep = this.endPoint.prepEndPoint('update_file/');
+    var formData = new FormData();
+    formData.append("id", id_file);
+    formData.append("file",  fileToUpload);
+
+    return this.http
+      .put(ep, formData, { headers: headers })
+  }
 }

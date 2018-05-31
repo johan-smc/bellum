@@ -42,6 +42,9 @@
               <span  class="glyphicon glyphicon-folder-open" dowload> </span>
             </button>
               {{file.name}}
+              <button class="btn btn-info" *ngIf="file.type=='FILE'" (click)="replaceFile(file.id)">
+                <span  class="glyphicon glyphicon-upload" dowload> </span>
+              </button>
               <div *ngIf="file.change" class="alert alert-danger">
                 <div>Changue file</div>
               </div>
