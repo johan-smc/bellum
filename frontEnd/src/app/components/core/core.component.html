@@ -1,4 +1,34 @@
+<div *ngIf="changeDate()" class="alert alert-danger">
+  <div>Chague password</div>
+</div>
 <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-6">
+      <ng-flash-message></ng-flash-message>
+      <div class="form-group">
+          <label for="file">Choose File</label>
+          <input type="file"
+                 id="file"
+                 (change)="handleFileInput($event.target.files)">
+      </div>
+      <form #fileForm = "ngForm" (submit) = "uploadFileToActivity()">
+        <input type="text" class="form-control" [(ngModel)] = "namefile" name="namefile" placeholder="Name file" required=true autofocus="" />
+        <button class="btn btn-primary"type="submit" name="button1">
+          Add File
+        </button>
+      </form>
+    </div>
+    <div class="col-lg-8 col-lg-offset-6">
+      <form #folderForm = "ngForm" (submit)="createFolder()">
+        <input type="text" class="form-control" [(ngModel)] = "namefolder" name="namefolder" placeholder="Name folder" required=true autofocus="" />
+        <button class="btn btn-primary"type="submit" name="button">
+          Add Folder
+        </button>
+      </form>
+    </div>
+
+  </div>
+
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2">
       <div *ngFor="let file of files" class="card">
@@ -8,8 +38,11 @@
               <span  class="glyphicon glyphicon-file" dowload> </span>
             </button>
 
-          <span *ngIf="file.type!='FILE'" class="glyphicon glyphicon-folder-open"></span>
-          {{file.name}}
+            <button class="btn btn-primary" *ngIf="file.type!='FILE'" (click)="getFiles(file.id)">
+              <span  class="glyphicon glyphicon-folder-open" dowload> </span>
+            </button>
+              {{file.name}}
+
         </div>
       </div>
     </div>

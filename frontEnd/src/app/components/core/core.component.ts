@@ -1,6 +1,9 @@
 import { Component, OnInit,Input } from '@angular/core';
 
 import { FileService } from '../../services/file.service';
+import { AuthService } from '../../services/auth.service';
+import { NgFlashMessageService } from 'ng-flash-messages';
+
 
 @Component({
   selector: 'app-core',
@@ -10,12 +13,19 @@ import { FileService } from '../../services/file.service';
 export class CoreComponent implements OnInit {
   @Input() idGroup: string = "";
   private files : any;
+  private namefile : string;
+  private namefolder : string;
+  private idFather : number;
 
+  fileToUpload: File = null;
   constructor(
     private fileService : FileService,
+    private ngFlashMessageService: NgFlashMessageService,
+    private authService: AuthService,
   ) {
     if( this.idGroup == "" )
       this.getFiles(null);
+
    }
 
   ngOnInit() {
@@ -23,6 +33,7 @@ export class CoreComponent implements OnInit {
 
   getFiles(father_id)
   {
+    this.idFather = father_id;
     const father = {
       father : father_id,
     }
@@ -48,4 +59,41 @@ export class CoreComponent implements OnInit {
         window.location.href = url;
     });
   }
+  handleFileInput(files: FileList) {
+    this.fileToUpload = files.item(0);
+  }
+  uploadFileToActivity() {
+    this.fileService.postFile(this.fileToUpload,this.namefile,this.idFather).subscribe(data => {
+
+      this.ngFlashMessageService.showFlashMessage({ messages:["Save file correct"], timeout : 1000, type : 'success'} );
+      this.getFiles(this.idFather);
+      }, error => {
+        console.log(error);
+      });
+  }
+  createFolder()
+  {
+    const folder={
+      name : this.namefolder,
+      father : this.idFather
+    };
+    this.fileService.createFolder(folder).subscribe(data => {
+
+      this.ngFlashMessageService.showFlashMessage({ messages:["Save folder correct"], timeout : 1000, type : 'success'} );
+      this.getFiles(this.idFather);
+      }, error => {
+        console.log(error);
+      });
+  }
+  changeDate()
+  {
+    var dateNow = new Date();
+    var dateU = new Date(this.authService.getDate());
+    if( dateNow-dateU > 2629746000 )
+      return true;
+    return false;
+
+  }
+
+
 }

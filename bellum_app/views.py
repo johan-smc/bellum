@@ -17,7 +17,7 @@ from bellum_app.api import user_service, file_service,os_service
 from bellum_app.models import User, INode
 from bellum_app.serializers.file_serializer import File_Serializer, Folder_Serializer
 
-from bellum_app.serializers.user_serializer import UserSerializer
+from bellum_app.serializers.user_serializer import UserSerializer,My_UserSerializer
 from bellum_app.serializers.group_serializer import My_GroupSerializer
 from bellum_app.serializers.user_file_serializer import UserFileSerializer
 from bellum_app.serializers.group_file_serializer import GroupFileSerializer
@@ -40,8 +40,11 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
             if not created:
                 token.created = datetime.datetime.utcnow()
                 token.save()
-
-            response_data = {'token': token.key}
+            user = user_service.get_pk(token.key)
+            user = user_service.get_myuser(user)
+            date = user.password_change
+            date = date.strftime('%Y-%m-%d')
+            response_data = {'token': token.key, 'date' :  date }
             response_data['success'] = True
 
             return Response(
@@ -161,6 +164,7 @@ class UserViewSet(viewsets.ViewSet):
 class FileViewSet(viewsets.ViewSet):
 
     def create(self, request):
+        print(request.data)
         request.POST._mutable = True
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
 

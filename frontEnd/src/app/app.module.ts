@@ -19,6 +19,7 @@ import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { FileUploadModule } from 'ng2-file-upload';
 import { CoreComponent } from './components/core/core.component'
 
 const appRoutes: Routes =[
@@ -43,6 +44,7 @@ const appRoutes: Routes =[
     HttpModule,
     NgFlashMessagesModule.forRoot(),
     NgbModule.forRoot(),
+    FileUploadModule,
 
   ],
   providers: [

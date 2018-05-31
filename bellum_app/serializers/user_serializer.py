@@ -7,8 +7,9 @@ from hashlib import  sha3_384
 
 class My_UserSerializer(serializers.ModelSerializer):
     user_django = serializers.ReadOnlyField(required=False)
-    role = serializers.Field(required=False)
+    role = serializers.Field(required=False,write_only=True)
     logs = serializers.CharField(required=False)
+    password_change = serializers.ReadOnlyField(required=False)
     class Meta:
         model = My_User
         fields = '__all__'
