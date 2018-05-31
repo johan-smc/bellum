@@ -55,6 +55,10 @@ class My_User(models.Model):
     #user_name = models.CharField(max_length=25, unique=True)
     #password = models.CharField(max_length=100)
 
+    def up(self,  *args, **kwargs):
+        self.password_change = datetime.now()
+        super(My_User, self).save(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         '''
         #hash password

@@ -33,7 +33,7 @@ class My_UserSerializer(serializers.ModelSerializer):
         print("--------->",validated_data['password'])
         instance.user_django.set_password(validated_data['password'])
         instance.user_django.save()
-        instance.modification_time = datetime.now()
+        instance.up()
         return instance
 
 

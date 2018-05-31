@@ -4,7 +4,7 @@ import os
 from django.http import HttpResponse
 from django.shortcuts import render
 
-import datetime
+from  datetime import datetime
 
 from rest_framework.response import Response
 from rest_framework import status, viewsets
@@ -77,6 +77,15 @@ class GroupViewSet(viewsets.ViewSet):
             groups_serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
+
+    def time(self , request):
+        time = datetime.now()
+        return Response(
+            time,
+            status=status.HTTP_200_OK
+        )
+
 
     def get(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
@@ -191,6 +200,16 @@ class UserViewSet(viewsets.ViewSet):
         user_id = user_service.get_pk(token)
         return Response(
             user_id,
+            status=status.HTTP_200_OK
+        )
+
+    def last_time(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id = user_service.get_pk(token)
+        mi_user = user_service.get_myuser(user_id)
+        resp = user_service.get_last(mi_user)
+        return Response(
+            resp,
             status=status.HTTP_200_OK
         )
 
@@ -443,3 +462,5 @@ get_usrid = UserViewSet.as_view(dict(get='get_usrid'))
 get_groups_owner = GroupViewSet.as_view(dict(get='get_groups_owner'))
 get_file = FileViewSet.as_view(dict(post='get_file'))
 update_pass = UserViewSet.as_view(dict(post='update'))
+last_time = UserViewSet.as_view(dict(get='last_time'))
+time_now = GroupViewSet.as_view(dict(get='time'))
