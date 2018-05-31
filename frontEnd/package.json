@@ -24,6 +24,7 @@
     "@ng-bootstrap/ng-bootstrap": "^2.0.0",
     "angular-common": "^0.1.0",
     "angular-core": "0.0.5",
+    "angular-download": "0.0.5",
     "angular2-jwt": "^0.2.3",
     "angular2-materialize": "^15.1.10",
     "bootstrap": "^4.1.1",

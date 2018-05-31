@@ -14,6 +14,7 @@ import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { EndPointService } from './services/end-point.service';
 import { UserService } from './services/user.service';
+import { FileService } from './services/file.service';
 import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 
@@ -49,6 +50,7 @@ const appRoutes: Routes =[
     AuthService,
     EndPointService,
     UserService,
+    FileService,
   ],
   bootstrap: [AppComponent]
 })

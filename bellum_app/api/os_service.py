@@ -37,6 +37,7 @@ def decrypt_file(file_name, key):
         fo.write(dec)
 
 
+
 '''
 #################################################################################
 async def encrypt_file(key, in_filename, out_filename=None, chunksize=64*1024):

@@ -29,6 +29,8 @@ def delete_user(user,inode):
 
 def delete_group(group,inode):
     try:
+        print(group)
+        print(inode)
         groups = Group_Inode.objects.filter(group=group, inode=inode)
         for group in groups:
             group.delete()
@@ -60,10 +62,9 @@ def get_permissions(user_id,file_id):
 
     return permissions
 
-def get_all_inodes(id):
+def get_all_inodes(id,id_user):
     try:
-
-        lista = INode.objects.filter(father=id)
+        lista = INode.objects.filter(father=id, owner= id_user)
         return lista
     except INode.DoesNotExist:
         return None

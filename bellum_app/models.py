@@ -122,7 +122,7 @@ class INode(models.Model):
     type = models.CharField(max_length=5,choices=TYPE_CHOICES)
     #TODO Changue password
     #password = models.CharField(max_length=400,default=b'\xbf\xc0\x85)\x10nc\x94\x02)j\xdf\xcb\xc4\x94\x9d(\x9e[EX\xc8\xd5\xbfI{\xa2$\x05(\xd5\x18')
-    password = models.CharField(max_length=400,blank=True)
+    password = models.BinaryField(blank=True)
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     modification_time = models.DateTimeField(default=datetime.now, blank=True)
     last_hash = models.CharField(max_length=400 , blank=True)
@@ -150,7 +150,6 @@ class INode(models.Model):
         filehash = sha3_384(filehash)
         self.last_hash = filehash.hexdigest()
         self.last_user_mod = self.owner
-        print("---------------")
         self.password  = Random.get_random_bytes(32)
         super(INode, self).save(*args, **kwargs)
 

@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
         var message = data['non_field_errors'];
         message = message[0];
         this.ngFlashMessageService.showFlashMessage({ messages:[message], timeout : 1000, type : 'danger'} );
-        this.router.navigate(['']);
+        this.router.navigate(['home']);
       }
     });
   }

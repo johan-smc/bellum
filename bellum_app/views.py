@@ -1,3 +1,7 @@
+import mimetypes
+import os
+
+from django.http import HttpResponse
 from django.shortcuts import render
 
 import datetime
@@ -9,7 +13,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from bellum_app.models import Group
 
-from bellum_app.api import user_service, file_service
+from bellum_app.api import user_service, file_service,os_service
 from bellum_app.models import User, INode
 from bellum_app.serializers.file_serializer import File_Serializer, Folder_Serializer
 
@@ -18,6 +22,8 @@ from bellum_app.serializers.group_serializer import My_GroupSerializer
 from bellum_app.serializers.user_file_serializer import UserFileSerializer
 from bellum_app.serializers.group_file_serializer import GroupFileSerializer
 from bellum_app.api import group_service
+
+from wsgiref.util import FileWrapper
 
 
 # Create your views here.
@@ -319,22 +325,30 @@ class FileViewSet(viewsets.ViewSet):
         )
 
     def get_inodes(self, request):
-        type = request.data['type']
-        if type == 'DIR':
-            resp = file_service.get_all_inodes(request.data['father'])
-            folder_serializer = Folder_Serializer(
-                resp,
-                many=True
-            )
-            return Response(
-                folder_serializer.data,
-                status=status.HTTP_200_OK
-            )
-        else:
-            return  Response(
-                "Not a directory",
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id= user_service.get_pk(token);
+        resp = file_service.get_all_inodes(request.data['father'], user_id)
+        folder_serializer = Folder_Serializer(
+            resp,
+            many=True
+        )
+        return Response(
+            folder_serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    def get_file(self, request):
+        id_file = request.data['id_file']
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id = user_service.get_pk(token)
+        data = file_service.get_inode(id_file)
+        os_service.decrypt_file(data.file.path+".enc", data.password)
+        print(data.file.path)
+        response = open(data.file.path)
+        mimetype = mimetypes.guess_type(
+            data.file.path)  # Return an array
+        os.remove(data.file.path)
+        return HttpResponse(response, content_type=mimetype[0])
 
 
 get_users = UserViewSet.as_view(dict(get='get'))
@@ -351,5 +365,6 @@ inode_user = FileViewSet.as_view(dict(post='relation_user', delete='delete_user'
 inode_group = FileViewSet.as_view(dict(post='relation_group', delete='delete_group'))
 get_inodes = FileViewSet.as_view(dict(post='get_inodes'))
 register = UserViewSet.as_view(dict(post='create'))
+get_file = FileViewSet.as_view(dict(post='get_file'))
 
 

@@ -11,14 +11,18 @@ from django.contrib.auth.models import User
 from hashlib import  sha3_384
 from bellum_app.api.os_service import encrypt_file
 import os
+from simplecrypt import encrypt, decrypt
+
 
 
 class File_Serializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     type = serializers.CharField(required=False, default="FILE")
     file = serializers.FileField(write_only=True)
+    password = serializers.Field(write_only=True,required=False)
     class Meta:
         model = INode
-        fields = ('name','type','password','file','owner','father')
+        fields = ('id','name','type','password','file','owner','father')
 
     def create(self, validated_data):
         print(validated_data)
@@ -31,6 +35,7 @@ class File_Serializer(serializers.ModelSerializer):
         my_user = My_User.objects.get(id=id)
         '''
         file = INode.objects.create( **validated_data)
+        print(file.password)
         encrypt_file(file.file.path,file.password)
         return file
 
@@ -53,10 +58,12 @@ class File_Serializer(serializers.ModelSerializer):
 
 
 class Folder_Serializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
     type = serializers.CharField(required=False,default="DIR")
+    password = serializers.Field(write_only=True,required=False)
     class Meta:
         model = INode
-        fields = ('name','type','password','owner','father')
+        fields = ('id','name','type','password','owner','father')
 
     def create(self, validated_data):
 
