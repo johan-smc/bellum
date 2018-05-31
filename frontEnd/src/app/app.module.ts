@@ -15,8 +15,12 @@ import { AuthService } from './services/auth.service';
 import { EndPointService } from './services/end-point.service';
 import { HomeComponent } from './components/home/home.component';
 
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { CoreComponent } from './components/core/core.component'
+
 const appRoutes: Routes =[
     {path : '' , component : LoginComponent },
+    {path : 'home' , component : HomeComponent },
     {path: '**', redirectTo: '/404'},
 ];
 
@@ -25,6 +29,7 @@ const appRoutes: Routes =[
     AppComponent,
     LoginComponent,
     HomeComponent,
+    CoreComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,6 +37,8 @@ const appRoutes: Routes =[
     FormsModule,
     HttpModule,
     NgFlashMessagesModule.forRoot(),
+    NgbModule.forRoot(),
+
   ],
   providers: [
     ValidateService,
