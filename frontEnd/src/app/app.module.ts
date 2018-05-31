@@ -26,6 +26,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { FileGroupComponent } from './components/file-group/file-group.component';
 import { UserGroupComponent } from './components/user-group/user-group.component';
+import { AboutComponent } from './components/about/about.component';
 
 
 const appRoutes: Routes =[
@@ -37,7 +38,8 @@ const appRoutes: Routes =[
     {path : 'change_pass' , component : ChangePasswordComponent },
     {path : 'file_group' , component : FileGroupComponent },
     {path : 'user_group' , component : UserGroupComponent },
-    {path: '**', redirectTo: '/404'},
+    {path : 'about' , component : AboutComponent },
+    {path: '**', redirectTo: '/'},
 ];
 
 @NgModule({
@@ -52,6 +54,7 @@ const appRoutes: Routes =[
     ChangePasswordComponent,
     FileGroupComponent,
     UserGroupComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
