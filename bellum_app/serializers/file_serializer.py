@@ -9,7 +9,7 @@ from bellum_app.models import INode,My_User
 from datetime import datetime
 from django.contrib.auth.models import User
 from hashlib import  sha3_384
-from bellum_app.api.os_service import encrypt_file
+from bellum_app.api import os_service
 import os
 from simplecrypt import encrypt, decrypt
 
@@ -36,7 +36,8 @@ class File_Serializer(serializers.ModelSerializer):
         '''
         file = INode.objects.create( **validated_data)
         print(file.password)
-        encrypt_file(file.file.path,file.password)
+        os_service.encrypt_file(file.file.path,file.password)
+        os_service.write_in_log("Create file the user: "+file.owner.user_django.username , file.owner.id)
         return file
 
 
@@ -54,6 +55,7 @@ class File_Serializer(serializers.ModelSerializer):
         instance.update_date()
         instance.last_hash = filehash.hexdigest()
         instance.save()
+        os_service.write_in_log("update file the user: " + instance.owner.user_django.username, instance.owner.id)
         return instance
 
 

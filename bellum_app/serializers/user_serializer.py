@@ -2,6 +2,8 @@ from rest_framework import  serializers
 from bellum_app.models import My_User,Role
 from django.contrib.auth.models import User
 from hashlib import  sha3_384
+from bellum.settings import FILE_ROOT
+import os
 
 
 
@@ -21,7 +23,9 @@ class My_UserSerializer(serializers.ModelSerializer):
         data = 2;
         role = Role.objects.get(pk=data)
         validated_data['role'] = role
-        validated_data['logs'] = user.username
+        path = FILE_ROOT+'/logs/'+user.username+'log'
+        validated_data['logs'] = path
+        open(path, 'w')
         return My_User.objects.create(user_django=user,**validated_data)
 
 

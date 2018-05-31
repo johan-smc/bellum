@@ -195,7 +195,7 @@ class FileViewSet(viewsets.ViewSet):
             )
         #######
 
-        if file_service.delete(file_id):
+        if file_service.delete(file_id,user_id):
             return Response(
                 "Deleted ok",
                 status=status.HTTP_200_OK

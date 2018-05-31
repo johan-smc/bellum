@@ -1,14 +1,17 @@
-from bellum_app.api import user_service, group_service
+from bellum_app.api import user_service, group_service,os_service
 from bellum_app.models import INode,User_Inode,Group_Inode
 import os
 
-def delete(file_id):
+def delete(file_id,user_id):
     try:
         file = INode.objects.get(id=file_id)
     except INode.DoesNotExist:
         return False
     os.remove(file.file.path)
+    user = user_service.get_myuser(user_id)
+    os_service.write_in_log("Delete file the user: "+user.user_django.username, file.logs )
     file.delete()
+
     return True
 
 

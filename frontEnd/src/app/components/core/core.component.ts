@@ -89,9 +89,12 @@ export class CoreComponent implements OnInit {
   {
     var dateNow = new Date();
     var dateU = new Date(this.authService.getDate());
-    if( dateNow-dateU > 2629746000 )
+    var limit : number = 2629746000;
+    var diff: number = dateNow-dateU;
+    if(  diff > limit )
       return true;
     return false;
+
 
   }
 
