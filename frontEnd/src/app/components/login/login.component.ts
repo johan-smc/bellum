@@ -42,7 +42,8 @@ export class LoginComponent implements OnInit {
       if(data['success']){
         this.authService.storeUserData(data['token'],data['date']);
         this.ngFlashMessageService.showFlashMessage({ messages:["Welcon to Bellum"], timeout : 1000, type : 'success'} );
-        this.router.navigate(['/home']);
+        // this.router.navigate(['/home']);
+        window.location.href = '/home'
       }
       else{
         var message = data['non_field_errors'];

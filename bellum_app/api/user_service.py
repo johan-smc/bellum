@@ -19,3 +19,5 @@ def get_pk(token):
 def get_groups(mi_user):
     return mi_user.groups.all()
 
+def get_all_users():
+    return My_User.objects.all()

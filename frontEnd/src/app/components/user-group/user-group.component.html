@@ -1,0 +1,28 @@
+<section>
+  <div class="wrapper">
+    <form #loginForm = "ngForm" (submit) = "submitUnion()" class="form-signin">
+
+      <ng-flash-message></ng-flash-message>
+      <h2  class="form-signin-heading">Delete Group</h2>
+        <p>Group</p>
+            <div class="form-group">
+
+              <select type="text" class="form-control" id='sel1' [(ngModel)]="group_sel" name = "group_sel">
+                <option *ngFor="let group of groups" [ngValue] = "group">{{group.name}}</option>
+              </select>
+
+            </div>
+            <p>User</p>
+            <div class="form-group">
+
+              <select type="text" class="form-control" id='sel1' [(ngModel)]="user_sel" name = "file_sel">
+                <option  *ngFor="let user of users" [ngValue] = "user" >{{user.name}}</option>
+              </select>
+
+            </div>
+      <button class="btn btn-primary btn-block" type="submit" >Union</button>
+      <a href='/home'>Home</a>
+
+    </form>
+  </div>
+</section>

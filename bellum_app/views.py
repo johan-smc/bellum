@@ -121,8 +121,7 @@ class GroupViewSet(viewsets.ViewSet):
 
     def removeG(self, request):
         print("AAAaAAaA", request.data)
-        group_service.remove(self, request.data)
-        txt = "grupo con id %s" % (request["id"])
+        group_service.remove( request.data)
         return Response(
             "grupo borrado",
             status=status.HTTP_202_ACCEPTED
@@ -181,8 +180,11 @@ class UserViewSet(viewsets.ViewSet):
         )
 
     def get(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id = user_service.get_pk(token)
+        user_serializer = My_UserSerializer(user_service.get_myuser(user_id))
         return Response(
-            "ok funciono creo",
+            user_serializer.data,
             status=status.HTTP_200_OK
         )
 
@@ -201,6 +203,7 @@ class UserViewSet(viewsets.ViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
+
     def update(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         user_id = user_service.get_pk(token)
@@ -212,6 +215,19 @@ class UserViewSet(viewsets.ViewSet):
             "Changed",
             status=status.HTTP_202_ACCEPTED
         )
+
+    def get_all_user(self, request):
+        user_serializer = My_UserSerializer(
+            user_service.get_all_users(),
+            many=True
+        )
+        print(user_serializer.data)
+        return Response(
+            user_serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+
 
 class FileViewSet(viewsets.ViewSet):
 
@@ -394,6 +410,18 @@ class FileViewSet(viewsets.ViewSet):
             folder_serializer.data,
             status=status.HTTP_200_OK
         )
+    def get_all_inodes(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id= user_service.get_pk(token);
+        resp = file_service.get_all_inodes_(user_id)
+        folder_serializer = Folder_Serializer(
+            resp,
+            many=True
+        )
+        return Response(
+            folder_serializer.data,
+            status=status.HTTP_200_OK
+        )
     def get_inodes_group(self, request):
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
         user_id= user_service.get_pk(token);
@@ -435,7 +463,7 @@ create_folder = FileViewSet.as_view(dict(post='create_folder'))
 update_file = FileViewSet.as_view(dict(put='update_file'))
 inode_user = FileViewSet.as_view(dict(post='relation_user', delete='delete_user'))
 inode_group = FileViewSet.as_view(dict(post='relation_group', delete='delete_group'))
-get_inodes = FileViewSet.as_view(dict(post='get_inodes'))
+get_inodes = FileViewSet.as_view(dict(post='get_inodes',get='get_all_inodes'))
 get_inodes_group = FileViewSet.as_view(dict(post='get_inodes_group'))
 register = UserViewSet.as_view(dict(post='create'))
 get_all_groups = GroupViewSet.as_view(dict(get='get_all_groups'))
@@ -443,3 +471,4 @@ get_usrid = UserViewSet.as_view(dict(get='get_usrid'))
 get_groups_owner = GroupViewSet.as_view(dict(get='get_groups_owner'))
 get_file = FileViewSet.as_view(dict(post='get_file'))
 update_pass = UserViewSet.as_view(dict(post='update'))
+get_all_user = UserViewSet.as_view(dict(get='get_all_user'))

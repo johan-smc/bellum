@@ -27,11 +27,13 @@ export class DeleteGroupComponent implements OnInit {
     });
   }
   onRegisterSubmit(){
-    var id = this.group_sel.id ;
-    console.log("---> " + id);
-    this.deleteFilesService.delFile(id).subscribe(data =>{
+    const info = {
+      id : this.group_sel.id
+    }
+    this.deleteFilesService.delFile(info).subscribe(data =>{
       data = JSON.parse(data['_body']);
-      this.router.navigate(['/home']);
+      // this.router.navigate(['/home']);
+      window.location.href = '/home';
     });
 
   }

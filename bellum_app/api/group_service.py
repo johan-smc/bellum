@@ -4,8 +4,10 @@ def get_groups():
     print(Group.objects.all())
     return Group.objects.all()
 
-def remove(self,data):
-    instance = Group.objects.get(id=data["id"])
+def remove(data):
+    id = data['id'];
+    print(id)
+    instance = Group.objects.get(id=id)
     instance.delete()
 
 def usrJoin(self,data):

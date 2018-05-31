@@ -22,5 +22,5 @@ urlpatterns = [
     path('get_groups_owner/',views.get_groups_owner),
     path('get_file/', views.get_file),
     path('update_pass/', views.update_pass),
-
+    path('get_all_user/', views.get_all_user),
 ]
