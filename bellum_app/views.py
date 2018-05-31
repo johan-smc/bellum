@@ -36,14 +36,17 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
                 token.save()
 
             response_data = {'token': token.key}
-            return Response(
+            response_data['success'] = True
 
+            return Response(
                 response_data,
                 status=status.HTTP_200_OK
             )
+        errors = serializer.errors
+        errors['success'] = False
         return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            errors,
+            status=status.HTTP_200_OK
         )
 
 
@@ -122,13 +125,17 @@ class UserViewSet(viewsets.ViewSet):
         user_serializer = UserSerializer(data=request.data)
         if user_serializer.is_valid():
             user_serializer.create(request.data)
+            data = user_serializer.data
+            data['success'] = True
             return Response(
-                user_serializer.data,
+                data,
                 status=status.HTTP_201_CREATED
             )
+        data = user_serializer.errors
+        data['success'] = False
         return Response(
             user_serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_200_OK
         )
 
     def get(self, request):

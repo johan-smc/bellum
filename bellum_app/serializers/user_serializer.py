@@ -7,6 +7,8 @@ from hashlib import  sha3_384
 
 class My_UserSerializer(serializers.ModelSerializer):
     user_django = serializers.ReadOnlyField(required=False)
+    role = serializers.Field(required=False)
+    logs = serializers.CharField(required=False)
     class Meta:
         model = My_User
         fields = '__all__'
@@ -14,9 +16,11 @@ class My_UserSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data,user):
-        data = validated_data.pop('role')
+        #data = validated_data.pop('role')
+        data = 2;
         role = Role.objects.get(pk=data)
         validated_data['role'] = role
+        validated_data['logs'] = user.username
         return My_User.objects.create(user_django=user,**validated_data)
 
 

@@ -1,0 +1,12 @@
+<section>
+  <div class="wrapper">
+    <form #loginForm = "ngForm" (submit) = "onLoginSubmit()" class="form-signin">
+      <ng-flash-message></ng-flash-message>
+      <h2  class="form-signin-heading">Log in</h2>
+      <input type="text" class="form-control" [(ngModel)] = "username" name="username" placeholder="User Name" required="" autofocus="" />
+      <input type="password" class="form-control" [(ngModel)] = "password" name="password" placeholder="Password" required=""/>
+      <button class="btn  btn-primary btn-block" type="submit">Login</button>
+      <a [routerLink]="['register']">Register</a>
+    </form>
+  </div>
+</section>
