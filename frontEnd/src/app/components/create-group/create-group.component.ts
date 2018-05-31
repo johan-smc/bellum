@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {GroupService} from '../../services/group.service'
+import {UserService} from '../../services/user.service'
 
 @Component({
   selector: 'app-create-group',
@@ -14,7 +15,8 @@ export class CreateGroupComponent implements OnInit {
 
   constructor(
     private router : Router ,
-    private groupService : GroupService
+    private groupService : GroupService,
+    private userService : UserService
   ) { }
 
   ngOnInit() {

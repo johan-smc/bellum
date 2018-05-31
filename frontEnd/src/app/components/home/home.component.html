@@ -21,7 +21,7 @@
                 <li ngbDropdown class="dropdown">
                   <a ngbDropdownToggle class="dropdown-toggle" data-toggle="dropdown"> Groups </a>
                   <ul  ngbDropdownMenu class="dropdown-menu" role="menu">
-                    <li *ngFor="let group of groups"> <a>{{group.name}}</a></li>
+                    <li *ngFor="let group of groups" > <a (click)="selectGroup(group.id)">{{group.name}}</a></li>
                   </ul>
                 </li>
 
@@ -33,10 +33,12 @@
         <div id="page-content-wrapper">
             <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
                 <span class="hamb-top"></span>
-          <span class="hamb-middle"></span>
-        <span class="hamb-bottom"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
             </button>
-            <app-core></app-core>
+
+              <app-core ></app-core>
+
         </div>
         <!-- /#page-content-wrapper -->
 

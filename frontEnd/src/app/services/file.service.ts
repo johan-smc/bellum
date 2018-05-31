@@ -53,5 +53,14 @@ export class FileService {
     return this.http.post(ep, folder,{headers:headers})
   }
 
+  getFilesGroup(father)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type','application/json');
+    headers.append('Authorization','Token '+this.authService.getToken());
+    let ep = this.endPoint.prepEndPoint('get_inodes_group/');
+    return this.http.post(ep, father,{headers:headers})
+  }
+
 
 }
