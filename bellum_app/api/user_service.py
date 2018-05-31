@@ -15,3 +15,7 @@ def get_pk(token):
     user = User.objects.get(id = token.user_id)
     print("-------------------------------------......................--------------->",user.my_user)
     return user.my_user.id
+
+def get_groups(mi_user):
+    return mi_user.groups.all()
+

@@ -50,9 +50,12 @@ class ObtainExpiringAuthToken(ObtainAuthToken):
         )
 
 
-
 class GroupViewSet(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
+        request.POST._mutable = True
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+
+        request.data['owner'] = user_service.get_pk(token)
         groups_serializer = My_GroupSerializer(data=request.data)
 
         if groups_serializer.is_valid():
@@ -67,6 +70,36 @@ class GroupViewSet(viewsets.ViewSet):
         )
 
     def get(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id = user_service.get_pk(token)
+        user_ob = user_service.get_myuser(user_id)
+        user_groups = user_service.get_groups(user_ob)
+        group_serializer = My_GroupSerializer(
+            user_groups,
+            many=True
+        )
+        print(group_serializer.data)
+        return Response(
+            group_serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    def get_groups_owner(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id = user_service.get_pk(token)
+        user_groups = group_service.get_groups_owner(user_id)
+        group_serializer = My_GroupSerializer(
+            user_groups,
+            many=True
+        )
+        print(group_serializer.data)
+        return Response(
+            group_serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    def get_all_groups(self, request):
+
         group_serializer = My_GroupSerializer(
             group_service.get_groups(),
             many=True
@@ -144,6 +177,14 @@ class UserViewSet(viewsets.ViewSet):
             status=status.HTTP_200_OK
         )
 
+    def get_usrid(self, request):
+        token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+        user_id = user_service.get_pk(token)
+        return Response(
+            user_id,
+            status=status.HTTP_200_OK
+        )
+
     def get_permissions(self):
         if self.action == 'create':
             permission_classes = [AllowAny]
@@ -178,7 +219,7 @@ class FileViewSet(viewsets.ViewSet):
         #######
         user_id = request.data['owner'] = user_service.get_pk(token)
         file_id = request.data['file_id']
-        if file_service.get_permissions(user_id,file_id) < 2 :
+        if file_service.get_permissions(user_id, file_id) < 2:
             return Response(
                 "Insufficient permissions",
                 status=status.HTTP_400_BAD_REQUEST
@@ -202,7 +243,7 @@ class FileViewSet(viewsets.ViewSet):
         #####
         user_id = request.data['owner']
         file_id = request.data['id']
-        if file_service.get_permissions(user_id,file_id) < 2 :
+        if file_service.get_permissions(user_id, file_id) < 2:
             return Response(
                 "Insufficient permissions",
                 status=status.HTTP_400_BAD_REQUEST
@@ -243,12 +284,11 @@ class FileViewSet(viewsets.ViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-
     def relation_user(self, request):
         user_file_serializer = UserFileSerializer(data=request.data)
         #######
         token = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
-        user_id =  user_service.get_pk(token)
+        user_id = user_service.get_pk(token)
         file_id = request.data['inode']
         if file_service.get_permissions(user_id, file_id) < 2:
             return Response(
@@ -293,7 +333,7 @@ class FileViewSet(viewsets.ViewSet):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    def delete_user(self,request):
+    def delete_user(self, request):
         user_id = request.data['user']
         inode_id = request.data['inode']
         if file_service.delete_user(user_id, inode_id):
@@ -305,6 +345,7 @@ class FileViewSet(viewsets.ViewSet):
             "wrong params",
             status=status.HTTP_400_BAD_REQUEST
         )
+
     def delete_group(self, request):
         group_id = request.data['group']
         inode_id = request.data['inode']
@@ -331,7 +372,7 @@ class FileViewSet(viewsets.ViewSet):
                 status=status.HTTP_200_OK
             )
         else:
-            return  Response(
+            return Response(
                 "Not a directory",
                 status=status.HTTP_400_BAD_REQUEST
             )
@@ -340,7 +381,7 @@ class FileViewSet(viewsets.ViewSet):
 get_users = UserViewSet.as_view(dict(get='get'))
 register_group = GroupViewSet.as_view(dict(post='create', put='update'))
 get_groups = GroupViewSet.as_view(dict(get='get'))
-del_group = GroupViewSet.as_view(dict(delete='removeG'))
+del_group = GroupViewSet.as_view(dict(post='removeG'))
 usr_to_group = GroupViewSet.as_view(dict(post='usrGroup', delete="unUsrgroup"))
 obtain_expiring_auth_token = ObtainExpiringAuthToken.as_view()
 upload_file = FileViewSet.as_view(dict(post='create'))
@@ -351,5 +392,6 @@ inode_user = FileViewSet.as_view(dict(post='relation_user', delete='delete_user'
 inode_group = FileViewSet.as_view(dict(post='relation_group', delete='delete_group'))
 get_inodes = FileViewSet.as_view(dict(post='get_inodes'))
 register = UserViewSet.as_view(dict(post='create'))
-
-
+get_all_groups = GroupViewSet.as_view(dict(get='get_all_groups'))
+get_usrid = UserViewSet.as_view(dict(get='get_usrid'))
+get_groups_owner = GroupViewSet.as_view(dict(get='get_groups_owner'))

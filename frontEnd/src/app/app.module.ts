@@ -18,12 +18,16 @@ import { HomeComponent } from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { CoreComponent } from './components/core/core.component'
+import { CoreComponent } from './components/core/core.component';
+import { CreateGroupComponent } from './components/create-group/create-group.component';
+import { DeleteGroupComponent } from './components/delete-group/delete-group.component'
 
 const appRoutes: Routes =[
     {path : '' , component : LoginComponent },
     {path : 'register' , component : RegisterComponent },
     {path : 'home' , component : HomeComponent },
+    {path : 'create_group' , component : CreateGroupComponent },
+    {path : 'delete_group' , component : DeleteGroupComponent },
     {path: '**', redirectTo: '/404'},
 ];
 
@@ -34,6 +38,8 @@ const appRoutes: Routes =[
     HomeComponent,
     RegisterComponent,
     CoreComponent,
+    CreateGroupComponent,
+    DeleteGroupComponent,
   ],
   imports: [
     BrowserModule,

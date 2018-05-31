@@ -19,3 +19,8 @@ def usrUnJoin(self,data):
 
 def get_group(group_id):
     return Group.objects.get(id=group_id)
+
+
+def get_groups_owner(owner_id):
+    a = Group.objects.filter(owner = owner_id)
+    return a

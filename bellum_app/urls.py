@@ -15,5 +15,9 @@ urlpatterns = [
     path('update_file/', views.update_file),
     path('inode_to_user/', views.inode_user),
     path('inode_to_group/', views.inode_group),
-    path('get_inodes/', views.get_inodes)
+    path('get_inodes/', views.get_inodes),
+    path('get_all_groups/',views.get_all_groups),
+    path('get_usrid/',views.get_usrid),
+    path('get_groups_owner/',views.get_groups_owner)
+
 ]

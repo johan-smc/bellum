@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       if(data['success']){
         this.authService.storeUserData(data['token']);
         this.ngFlashMessageService.showFlashMessage({ messages:["Welcon to Bellum"], timeout : 1000, type : 'success'} );
-        this.router.navigate(['']);
+        this.router.navigate(['/home']);
       }
       else{
         var message = data['non_field_errors'];
