@@ -41,7 +41,7 @@ class File_Serializer(serializers.ModelSerializer):
         file = INode.objects.create( **validated_data)
         print(file.password)
         os_service.encrypt_file(file.file.path,file.password)
-        os_service.write_in_log("Create file the user: "+file.owner.user_django.username , file.owner.id)
+        os_service.write_in_log("Create file the user: "+file.owner.user_django.username+ "\n", file.owner.id)
         return file
 
 
@@ -75,5 +75,6 @@ class Folder_Serializer(serializers.ModelSerializer):
         fields = ('id','name','type','password','owner','father','last_hash','user_inode_set','last_user_mod')
 
     def create(self, validated_data):
-
-        return INode.objects.create( **validated_data)
+        file = INode.objects.create( **validated_data)
+        os_service.write_in_log("Create folder the user: " + file.owner.user_django.username+ "\n", file.owner.id)
+        return file

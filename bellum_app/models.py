@@ -70,6 +70,12 @@ class My_User(models.Model):
         super(My_User, self).save(*args,**kwargs)
 
 class Group(models.Model):
+
+    owner = models.ForeignKey(
+        My_User,
+
+        on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=100)
     creation_field = models.DateTimeField(default=datetime.now, blank=True)
     modification_time = models.DateTimeField(default=datetime.now, blank=True)

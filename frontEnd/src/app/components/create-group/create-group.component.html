@@ -1,0 +1,17 @@
+<section>
+  <div class="wrapper">
+    <form #loginForm = "ngForm" (submit) = "onRegisterSubmit()" class="form-signin">
+
+      <ng-flash-message></ng-flash-message>
+      <h2  class="form-signin-heading">Create Group</h2>
+
+      <input type="text" class="form-control" [(ngModel)] = "name" name="name" placeholder="Group Name" required=""/>
+
+      <input type="text" class="form-control" [(ngModel)] = "description" name="description" placeholder="Description" required=""/>
+
+      <button class="btn btn-primary btn-block" type="submit">Create Group</button>
+      <a href='/home'>Home</a>
+
+    </form>
+  </div>
+</section>

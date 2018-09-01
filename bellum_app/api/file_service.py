@@ -7,9 +7,11 @@ def delete(file_id,user_id):
         file = INode.objects.get(id=file_id)
     except INode.DoesNotExist:
         return False
-    os.remove(file.file.path)
+    if file.type == 'FILE':
+        os_service.decrypt_file(file.file.path+'.enc',file.password)
+    #os.remove(file.file.path)
     user = user_service.get_myuser(user_id)
-    os_service.write_in_log("Delete file the user: "+user.user_django.username, file.logs )
+    os_service.write_in_log("Delete file the user: "+user.user_django.username+"\n", user.id )
     file.delete()
 
     return True
@@ -68,6 +70,21 @@ def get_permissions(user_id,file_id):
 def get_all_inodes(id,id_user):
     try:
         lista = INode.objects.filter(father=id, owner= id_user)
+        return lista
+    except INode.DoesNotExist:
+        return None
+
+def get_all_inodes_(id_user):
+    try:
+        lista = INode.objects.filter( owner= id_user)
+        return lista
+    except INode.DoesNotExist:
+        return None
+
+def get_all_inodes_group(id,id_group):
+    try:
+        group = group_service.get_group(id_group)
+        lista = group.inodes.all()
         return lista
     except INode.DoesNotExist:
         return None

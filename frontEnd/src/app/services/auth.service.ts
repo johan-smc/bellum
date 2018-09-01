@@ -3,9 +3,6 @@ import {Http, Headers} from "@angular/http";
 import {tokenNotExpired} from 'angular2-jwt';
 import {EndPointService} from './end-point.service';
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -47,4 +44,5 @@ export class AuthService {
   {
     return localStorage.getItem('date');
   }
+
 }

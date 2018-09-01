@@ -12,15 +12,33 @@
                 <li>
                     <a href="/home">My Files</a>
                 </li>
+                <li>
+                    <a href="/create_group">Create Group</a>
+                </li>
+                <li>
+                    <a href="/file_group">Conect File </a>
+                </li>
+                <li>
+                    <a href="/user_group">Conect User to Group </a>
+                </li>
+                <li>
+                    <a href="/delete_group">Delete Group</a>
+                </li>
+                <li>
+                    <a href="/delete_file">Delete File</a>
+                </li>
+
+                <li>
+                    <a href="/change_pass">Change Password</a>
+                </li>
                 <li ngbDropdown class="dropdown">
-                  <a ngbDropdownToggle class="dropdown-toggle" data-toggle="dropdown"> Groups <span class="caret"></span></a>
-                  <ul ngbDropdownMenu class="dropdown-menu" role="menu">
-                    <!-- <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li><a href="#">Separated link</a></li>
-                    <li><a href="#">One more separated link</a></li> -->
+                  <a ngbDropdownToggle class="dropdown-toggle" data-toggle="dropdown"> Groups </a>
+                  <ul  ngbDropdownMenu class="dropdown-menu" role="menu">
+                    <li *ngFor="let group of groups" > <a (click)="selectGroup(group.id)">{{group.name}}</a></li>
                   </ul>
+                </li>
+                <li>
+                  <a href="/about">About</a>
                 </li>
 
             </ul>
@@ -31,10 +49,12 @@
         <div id="page-content-wrapper">
             <button type="button" class="hamburger is-closed" data-toggle="offcanvas">
                 <span class="hamb-top"></span>
-          <span class="hamb-middle"></span>
-        <span class="hamb-bottom"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
             </button>
-            <app-core></app-core>
+
+              <app-core ></app-core>
+
         </div>
         <!-- /#page-content-wrapper -->
 

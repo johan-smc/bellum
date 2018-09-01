@@ -2,6 +2,8 @@ import { Component, OnInit,Input } from '@angular/core';
 
 import { FileService } from '../../services/file.service';
 import { AuthService } from '../../services/auth.service';
+import { GroupService } from '../../services/group.service';
+import { UserService } from '../../services/user.service';
 import { NgFlashMessageService } from 'ng-flash-messages';
 
 
@@ -11,7 +13,7 @@ import { NgFlashMessageService } from 'ng-flash-messages';
   styleUrls: ['./core.component.css']
 })
 export class CoreComponent implements OnInit {
-  @Input() idGroup: string = "";
+  public idGroup: string = "";
   private files : any;
   private namefile : string;
   private namefolder : string;
@@ -22,10 +24,10 @@ export class CoreComponent implements OnInit {
     private fileService : FileService,
     private ngFlashMessageService: NgFlashMessageService,
     private authService: AuthService,
+    private groupService: GroupService,
+    private userService: UserService,
   ) {
-    if( this.idGroup == "" )
-      this.getFiles(null);
-
+    this.refresh(null);
    }
 
   ngOnInit() {
@@ -40,6 +42,34 @@ export class CoreComponent implements OnInit {
     this.fileService.getFiles(father).subscribe(data=>{
       data = JSON.parse(data['_body']);
       this.files = data;
+      this.userService.get_usr_id().subscribe(info=>{
+        info = JSON.parse(info['_body']);
+        for( var i =0 ; i < this.files.length ; ++i )
+        {
+          this.files[i]['change']=this.files[i]['last_user_mod']['id']!=info['id'];
+        }
+
+      });
+    });
+  }
+  getFilesGroup(father_id)
+  {
+    this.idFather = father_id;
+    const father = {
+      group_id: this.idGroup,
+      father : father_id,
+    }
+    this.fileService.getFilesGroup(father).subscribe(data=>{
+      data = JSON.parse(data['_body']);
+      this.files = data;
+      this.userService.get_usr_id().subscribe(info=>{
+        info = JSON.parse(info['_body']);
+        for( var i =0 ; i < this.files.length ; ++i )
+        {
+          this.files[i]['change']=this.files[i]['last_user_mod']['id']!=info['id'];
+        }
+
+      });
     });
   }
   dowloadOnClick(id)
@@ -66,7 +96,7 @@ export class CoreComponent implements OnInit {
     this.fileService.postFile(this.fileToUpload,this.namefile,this.idFather).subscribe(data => {
       console.log(data);
       this.ngFlashMessageService.showFlashMessage({ messages:["Save file correct"], timeout : 1000, type : 'success'} );
-      this.getFiles(this.idFather);
+      this.refresh(this.idFather);
       }, error => {
         console.log(error);
       });
@@ -80,21 +110,37 @@ export class CoreComponent implements OnInit {
     this.fileService.createFolder(folder).subscribe(data => {
 
       this.ngFlashMessageService.showFlashMessage({ messages:["Save folder correct"], timeout : 1000, type : 'success'} );
-      this.getFiles(this.idFather);
+      this.refresh(this.idFather);
       }, error => {
         console.log(error);
       });
   }
   changeDate()
   {
-    var dateNow = new Date();
-    var dateU = new Date(this.authService.getDate());
-    var limit : number = 2629746000;
-    var diff: number = dateNow-dateU;
-    if(  diff > limit )
-      return true;
+    // var dateNow = new Date();
+    // var dateU = new Date(this.authService.getDate());
+    // var limit : number = 2629746000;
+    // var diff: number = dateNow-dateU;
+    // if(  diff > limit )
+    //   return true;
     return false;
+  }
 
+  refresh(father)
+  {
+    if( this.idGroup == "" )
+      this.getFiles(father);
+    else
+      this.getFilesGroup(father);
+  }
+
+  ngDoCheck()
+  {
+    if( this.idGroup != this.groupService.getGroup() )
+    {
+      this.idGroup = this.groupService.getGroup();
+      this.refresh(this.idFather);
+    }
 
   }
 

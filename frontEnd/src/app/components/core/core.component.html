@@ -3,7 +3,7 @@
 </div>
 <div class="container">
   <div class="row">
-    <div class="col-lg-8 col-lg-offset-6">
+    <div class="col-lg-8 col-lg-offset-2">
       <ng-flash-message></ng-flash-message>
       <div class="form-group">
           <label for="file">Choose File</label>
@@ -18,7 +18,7 @@
         </button>
       </form>
     </div>
-    <div class="col-lg-8 col-lg-offset-6">
+    <div class="col-lg-8 col-lg-offset-2">
       <form #folderForm = "ngForm" (submit)="createFolder()">
         <input type="text" class="form-control" [(ngModel)] = "namefolder" name="namefolder" placeholder="Name folder" required=true autofocus="" />
         <button class="btn btn-primary"type="submit" name="button">
@@ -42,7 +42,9 @@
               <span  class="glyphicon glyphicon-folder-open" dowload> </span>
             </button>
               {{file.name}}
-
+              <div *ngIf="file.change" class="alert alert-danger">
+                <div>Changue file</div>
+              </div>
         </div>
       </div>
     </div>
